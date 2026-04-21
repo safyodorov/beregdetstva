@@ -2,8 +2,19 @@
 
 import { useEffect, useState } from 'react';
 
+const NAV_LINKS = [
+  ['#history', 'История'],
+  ['#stages', 'Этапы'],
+  ['#landscape', 'Ландшафт'],
+  ['#gallery', 'Галерея'],
+  ['#team', 'Команда'],
+  ['#thanks', 'Спасибо'],
+];
+
 function Nav({ theme, setTheme }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
@@ -11,36 +22,82 @@ function Nav({ theme, setTheme }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
+
   return (
-    <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
-      <a href="#top" className="nav__brand">
-        <span className="nav__brand-mark">Б</span>
-        <span>
-          <span style={{ display: 'block', fontSize: 16, lineHeight: 1.1 }}>Берег Детства</span>
-          <span
-            className="mono"
-            style={{ display: 'block', fontSize: 10, opacity: 0.6, letterSpacing: '0.15em' }}
-          >
-            ТОС · Новая Дерябиха
+    <>
+      <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
+        <a href="#top" className="nav__brand">
+          <span className="nav__brand-mark">Б</span>
+          <span>
+            <span style={{ display: 'block', fontSize: 16, lineHeight: 1.1 }}>Берег Детства</span>
+            <span
+              className="mono"
+              style={{ display: 'block', fontSize: 10, opacity: 0.6, letterSpacing: '0.15em' }}
+            >
+              ТОС · Новая Дерябиха
+            </span>
           </span>
-        </span>
-      </a>
-      <div className="nav__links">
-        <a href="#history">История</a>
-        <a href="#stages">Этапы</a>
-        <a href="#landscape">Ландшафт</a>
-        <a href="#gallery">Галерея</a>
-        <a href="#team">Команда</a>
-        <a href="#thanks">Спасибо</a>
-      </div>
-      <button
-        className="theme-toggle"
-        aria-label="Переключить тему"
-        onClick={() => setTheme(theme === 'day' ? 'night' : 'day')}
+        </a>
+        <div className="nav__links">
+          {NAV_LINKS.map(([href, label]) => (
+            <a key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </div>
+        <button
+          className="theme-toggle"
+          aria-label="Переключить тему"
+          onClick={() => setTheme(theme === 'day' ? 'night' : 'day')}
+        >
+          <span className="theme-toggle__knob">{theme === 'day' ? '☀' : '☾'}</span>
+        </button>
+        <button
+          className={`nav__burger ${menuOpen ? 'is-open' : ''}`}
+          aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </nav>
+
+      <div
+        className={`mobile-menu ${menuOpen ? 'is-open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!menuOpen}
+        onClick={() => setMenuOpen(false)}
       >
-        <span className="theme-toggle__knob">{theme === 'day' ? '☀' : '☾'}</span>
-      </button>
-    </nav>
+        <div className="mobile-menu__inner" onClick={(e) => e.stopPropagation()}>
+          {NAV_LINKS.map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              className="mobile-menu__link serif"
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
