@@ -98,8 +98,19 @@ const CHAPTERS = [
     t: 'Освещение',
     body:
       'В 2025 году с помощью администрации Богданихского сельского поселения и лично Сергея Васильевича Машина удалось решить вопрос с освещением детской площадки. Теперь тут светло и безопасно в любое время дня и ночи.',
-    photo: '/photos/playground-night.jpg',
+    photo: '/photos/osveshchenie/1.jpg',
     accent: '#c9a77b',
+    gallery: [
+      '/photos/osveshchenie/1.jpg',
+      '/photos/osveshchenie/2.jpg',
+      '/photos/osveshchenie/3.jpg',
+      '/photos/osveshchenie/4.jpg',
+      '/photos/osveshchenie/5.jpg',
+      '/photos/osveshchenie/6.jpg',
+      '/photos/osveshchenie/7.jpg',
+      '/photos/osveshchenie/8.jpg',
+      '/photos/osveshchenie/9.jpg',
+    ],
   },
   {
     n: '1.10',
