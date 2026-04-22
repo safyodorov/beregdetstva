@@ -90,8 +90,19 @@ const CHAPTERS = [
     t: 'Ландшафтный дизайн',
     body:
       'Привлекли профессиональных ландшафтных дизайнеров. Пузыреплодник, клёны, спирея, люпины — у каждого растения своё место и свой сезон.',
-    photo: '/photos/spirea-pink.jpg',
+    photo: '/photos/landshaft/1.jpg',
     accent: '#385c3e',
+    gallery: [
+      '/photos/landshaft/1.jpg',
+      '/photos/landshaft/2.jpg',
+      '/photos/landshaft/3.jpg',
+      '/photos/landshaft/4.jpg',
+      '/photos/landshaft/5.jpg',
+      '/photos/landshaft/6.jpg',
+      '/photos/landshaft/7.jpg',
+      '/photos/landshaft/8.jpg',
+      '/photos/landshaft/9.jpg',
+    ],
   },
   {
     n: '1.9',
