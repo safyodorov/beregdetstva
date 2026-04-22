@@ -117,7 +117,7 @@ const CHAPTERS = [
     t: 'Взгляд в будущее',
     body:
       'Каток зимой, ролики и самокаты летом, ягодные острова, зелёная лагуна. Пятый этап — открытый вопрос, который мы задаём соседям.',
-    photo: '/photos/playground-sunset.jpg',
+    photo: '/photos/future.jpg',
     accent: '#7a1f1f',
   },
 ];
