@@ -251,74 +251,74 @@ export default function Stages() {
         </div>
 
         <div className="stage-panel" style={{ '--panel-col': stage.colour }}>
-          <div className="stage-panel__left">
+          <div className="stage-panel__head">
             <div className="stage-panel__eyebrow mono">{stage.period}</div>
             <h3 className="stage-panel__title serif">{stage.title}</h3>
             <p className="stage-panel__desc">{stage.desc}</p>
+          </div>
 
-            <div className="stage-schema">
-              <div className="stage-schema__frame">
-                {stage.photoSchema ? (
-                  <img
-                    src={stage.photoSchema}
-                    alt={`Схема — ${stage.title}`}
-                    className="stage-schema__img"
-                    loading="lazy"
+          <div className="stage-panel__schema">
+            <div className="stage-schema__frame">
+              {stage.photoSchema ? (
+                <img
+                  src={stage.photoSchema}
+                  alt={`Схема — ${stage.title}`}
+                  className="stage-schema__img"
+                  loading="lazy"
+                />
+              ) : (
+                <svg viewBox="0 0 400 260" className="stage-schema__svg">
+                  <defs>
+                    <pattern
+                      id={`grid-${stage.id}`}
+                      width="20"
+                      height="20"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
+                    </pattern>
+                  </defs>
+                  <rect width="400" height="260" fill={`url(#grid-${stage.id})`} />
+                  <path
+                    d="M 20 40 Q 100 20 200 30 T 380 50 Q 390 150 370 220 Q 200 250 40 230 Q 10 140 20 40 Z"
+                    fill={stage.colour}
+                    fillOpacity="0.06"
+                    stroke={stage.colour}
+                    strokeWidth="1.2"
+                    strokeDasharray="3,2"
                   />
-                ) : (
-                  <svg viewBox="0 0 400 260" className="stage-schema__svg">
-                    <defs>
-                      <pattern
-                        id={`grid-${stage.id}`}
-                        width="20"
-                        height="20"
-                        patternUnits="userSpaceOnUse"
-                      >
-                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                      </pattern>
-                    </defs>
-                    <rect width="400" height="260" fill={`url(#grid-${stage.id})`} />
-                    <path
-                      d="M 20 40 Q 100 20 200 30 T 380 50 Q 390 150 370 220 Q 200 250 40 230 Q 10 140 20 40 Z"
-                      fill={stage.colour}
-                      fillOpacity="0.06"
-                      stroke={stage.colour}
-                      strokeWidth="1.2"
-                      strokeDasharray="3,2"
-                    />
-                    {Array.from({ length: 4 + stage.id }).map((_, i) => {
-                      const cx = 60 + ((i * 67) % 300);
-                      const cy = 70 + ((i * 53) % 140);
-                      const r = 14 + (i % 3) * 6;
-                      return (
-                        <circle
-                          key={i}
-                          cx={cx}
-                          cy={cy}
-                          r={r}
-                          fill={stage.colour}
-                          fillOpacity="0.18"
-                          stroke={stage.colour}
-                          strokeWidth="1"
-                        />
-                      );
-                    })}
-                    <text x="30" y="30" fontSize="9" fill={stage.colour} fontFamily="monospace" letterSpacing="1">
-                      {`PLAN · ЭТАП ${stage.id}`}
-                    </text>
-                    <text x="330" y="250" fontSize="9" fill={stage.colour} fontFamily="monospace" opacity="0.6">
-                      1:200
-                    </text>
-                  </svg>
-                )}
-              </div>
-              <div className="stage-schema__caption mono">
-                {stage.photoSchema ? '↑ общий план площадки' : '↑ схема размещения · масштаб 1:200'}
-              </div>
+                  {Array.from({ length: 4 + stage.id }).map((_, i) => {
+                    const cx = 60 + ((i * 67) % 300);
+                    const cy = 70 + ((i * 53) % 140);
+                    const r = 14 + (i % 3) * 6;
+                    return (
+                      <circle
+                        key={i}
+                        cx={cx}
+                        cy={cy}
+                        r={r}
+                        fill={stage.colour}
+                        fillOpacity="0.18"
+                        stroke={stage.colour}
+                        strokeWidth="1"
+                      />
+                    );
+                  })}
+                  <text x="30" y="30" fontSize="9" fill={stage.colour} fontFamily="monospace" letterSpacing="1">
+                    {`PLAN · ЭТАП ${stage.id}`}
+                  </text>
+                  <text x="330" y="250" fontSize="9" fill={stage.colour} fontFamily="monospace" opacity="0.6">
+                    1:200
+                  </text>
+                </svg>
+              )}
+            </div>
+            <div className="stage-schema__caption mono">
+              {stage.photoSchema ? '↑ общий план площадки' : '↑ схема размещения · масштаб 1:200'}
             </div>
           </div>
 
-          <div className="stage-panel__right">
+          <div className="stage-panel__equip">
             <div className="equip-header mono">Оборудование · {stage.items.length || '—'}</div>
 
             {stage.open ? (
