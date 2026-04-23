@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const STAGES = [
   {
@@ -10,11 +10,17 @@ const STAGES = [
     colour: '#c24a4a',
     desc:
       'Безопасный мягкий островок для детей 1–3 лет: песочница, качалки, маленькая горка, низкий домик. Сюда приходят мамы с колясками.',
+    photoSchema: '/photos/stage0/plan.jpg',
     items: [
-      { n: 'Песочница «Лодочка»', size: '2400 × 2400 × 400 мм', note: 'С бортиком из лиственницы и крышкой-скамьёй.' },
-      { n: 'Качалка-пружина «Машинка»', size: '900 × 400 × 700 мм', note: 'Для одного ребёнка, от 1 года.' },
-      { n: 'Домик «Теремок»', size: '1500 × 1500 × 1700 мм', note: 'Полуоткрытый, с окошком и столиком.' },
-      { n: 'Мини-горка', size: '2200 × 600 × 1500 мм', note: 'Высота ската 90 см, борт безопасности.' },
+      { n: 'Оборудование 1', photo: '/photos/stage0/item-1.jpg' },
+      { n: 'Оборудование 2', photo: '/photos/stage0/item-2.jpg' },
+      { n: 'Оборудование 3', photo: '/photos/stage0/item-3.jpg' },
+      { n: 'Оборудование 4', photo: '/photos/stage0/item-4.jpg' },
+      { n: 'Оборудование 5', photo: '/photos/stage0/item-5.jpg' },
+      { n: 'Оборудование 6', photo: '/photos/stage0/item-6.jpg' },
+      { n: 'Оборудование 7', photo: '/photos/stage0/item-7.jpg' },
+      { n: 'Оборудование 8', photo: '/photos/stage0/item-8.jpg' },
+      { n: 'Оборудование 9', photo: '/photos/stage0/item-9.jpg' },
     ],
   },
   {
@@ -84,6 +90,96 @@ const STAGES = [
     open: true,
   },
 ];
+
+function EquipCarousel({ items, stage }) {
+  const railRef = useRef(null);
+  const [page, setPage] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
+
+  const recalc = () => {
+    const el = railRef.current;
+    if (!el) return;
+    const cardW = el.firstChild ? el.firstChild.getBoundingClientRect().width : el.clientWidth;
+    const perView = Math.max(1, Math.round(el.clientWidth / cardW));
+    setPageCount(Math.max(1, Math.ceil(items.length / perView)));
+    setPage(Math.round(el.scrollLeft / (cardW * perView)));
+  };
+
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    recalc();
+    const onScroll = () => recalc();
+    el.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', recalc);
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', recalc);
+    };
+  }, [items.length]);
+
+  const scrollBy = (dir) => {
+    const el = railRef.current;
+    if (!el) return;
+    const cardW = el.firstChild ? el.firstChild.getBoundingClientRect().width : el.clientWidth;
+    const perView = Math.max(1, Math.round(el.clientWidth / cardW));
+    const gap = 14;
+    el.scrollBy({ left: dir * (cardW + gap) * perView, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="equip-carousel">
+      <div className="equip-carousel__rail" ref={railRef}>
+        {items.map((it, i) => (
+          <div key={i} className="equip-card">
+            <div
+              className="equip-card__photo"
+              style={
+                it.photo
+                  ? undefined
+                  : { background: `linear-gradient(135deg, ${stage.colour}22, ${stage.colour}08)` }
+              }
+            >
+              {it.photo ? (
+                <img src={it.photo} alt={it.n} loading="lazy" />
+              ) : (
+                <EquipIcon idx={i} colour={stage.colour} />
+              )}
+            </div>
+            <div className="equip-card__body">
+              <div className="equip-card__name serif">{it.n}</div>
+              {it.size && <div className="equip-card__size mono">{it.size}</div>}
+              {it.note && <div className="equip-card__note">{it.note}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="equip-carousel__controls">
+        <button
+          type="button"
+          className="equip-carousel__btn"
+          aria-label="Назад"
+          onClick={() => scrollBy(-1)}
+          disabled={page <= 0}
+        >
+          ‹
+        </button>
+        <div className="equip-carousel__dots mono">
+          {page + 1} / {pageCount}
+        </div>
+        <button
+          type="button"
+          className="equip-carousel__btn"
+          aria-label="Вперёд"
+          onClick={() => scrollBy(1)}
+          disabled={page >= pageCount - 1}
+        >
+          ›
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function EquipIcon({ idx, colour }) {
   const common = { stroke: colour, strokeWidth: 1.5, fill: 'none', strokeLinecap: 'round' };
@@ -162,52 +258,63 @@ export default function Stages() {
 
             <div className="stage-schema">
               <div className="stage-schema__frame">
-                <svg viewBox="0 0 400 260" className="stage-schema__svg">
-                  <defs>
-                    <pattern
-                      id={`grid-${stage.id}`}
-                      width="20"
-                      height="20"
-                      patternUnits="userSpaceOnUse"
-                    >
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                    </pattern>
-                  </defs>
-                  <rect width="400" height="260" fill={`url(#grid-${stage.id})`} />
-                  <path
-                    d="M 20 40 Q 100 20 200 30 T 380 50 Q 390 150 370 220 Q 200 250 40 230 Q 10 140 20 40 Z"
-                    fill={stage.colour}
-                    fillOpacity="0.06"
-                    stroke={stage.colour}
-                    strokeWidth="1.2"
-                    strokeDasharray="3,2"
+                {stage.photoSchema ? (
+                  <img
+                    src={stage.photoSchema}
+                    alt={`Схема — ${stage.title}`}
+                    className="stage-schema__img"
+                    loading="lazy"
                   />
-                  {Array.from({ length: 4 + stage.id }).map((_, i) => {
-                    const cx = 60 + ((i * 67) % 300);
-                    const cy = 70 + ((i * 53) % 140);
-                    const r = 14 + (i % 3) * 6;
-                    return (
-                      <circle
-                        key={i}
-                        cx={cx}
-                        cy={cy}
-                        r={r}
-                        fill={stage.colour}
-                        fillOpacity="0.18"
-                        stroke={stage.colour}
-                        strokeWidth="1"
-                      />
-                    );
-                  })}
-                  <text x="30" y="30" fontSize="9" fill={stage.colour} fontFamily="monospace" letterSpacing="1">
-                    {`PLAN · ЭТАП ${stage.id}`}
-                  </text>
-                  <text x="330" y="250" fontSize="9" fill={stage.colour} fontFamily="monospace" opacity="0.6">
-                    1:200
-                  </text>
-                </svg>
+                ) : (
+                  <svg viewBox="0 0 400 260" className="stage-schema__svg">
+                    <defs>
+                      <pattern
+                        id={`grid-${stage.id}`}
+                        width="20"
+                        height="20"
+                        patternUnits="userSpaceOnUse"
+                      >
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
+                      </pattern>
+                    </defs>
+                    <rect width="400" height="260" fill={`url(#grid-${stage.id})`} />
+                    <path
+                      d="M 20 40 Q 100 20 200 30 T 380 50 Q 390 150 370 220 Q 200 250 40 230 Q 10 140 20 40 Z"
+                      fill={stage.colour}
+                      fillOpacity="0.06"
+                      stroke={stage.colour}
+                      strokeWidth="1.2"
+                      strokeDasharray="3,2"
+                    />
+                    {Array.from({ length: 4 + stage.id }).map((_, i) => {
+                      const cx = 60 + ((i * 67) % 300);
+                      const cy = 70 + ((i * 53) % 140);
+                      const r = 14 + (i % 3) * 6;
+                      return (
+                        <circle
+                          key={i}
+                          cx={cx}
+                          cy={cy}
+                          r={r}
+                          fill={stage.colour}
+                          fillOpacity="0.18"
+                          stroke={stage.colour}
+                          strokeWidth="1"
+                        />
+                      );
+                    })}
+                    <text x="30" y="30" fontSize="9" fill={stage.colour} fontFamily="monospace" letterSpacing="1">
+                      {`PLAN · ЭТАП ${stage.id}`}
+                    </text>
+                    <text x="330" y="250" fontSize="9" fill={stage.colour} fontFamily="monospace" opacity="0.6">
+                      1:200
+                    </text>
+                  </svg>
+                )}
               </div>
-              <div className="stage-schema__caption mono">↑ схема размещения · масштаб 1:200</div>
+              <div className="stage-schema__caption mono">
+                {stage.photoSchema ? '↑ общий план площадки' : '↑ схема размещения · масштаб 1:200'}
+              </div>
             </div>
           </div>
 
@@ -226,25 +333,7 @@ export default function Stages() {
                 </a>
               </div>
             ) : (
-              <div className="equip-grid">
-                {stage.items.map((it, i) => (
-                  <div key={i} className="equip-card">
-                    <div
-                      className="equip-card__photo"
-                      style={{
-                        background: `linear-gradient(135deg, ${stage.colour}22, ${stage.colour}08)`,
-                      }}
-                    >
-                      <EquipIcon idx={i} colour={stage.colour} />
-                    </div>
-                    <div className="equip-card__body">
-                      <div className="equip-card__name serif">{it.n}</div>
-                      <div className="equip-card__size mono">{it.size}</div>
-                      <div className="equip-card__note">{it.note}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <EquipCarousel items={stage.items} stage={stage} />
             )}
           </div>
         </div>
