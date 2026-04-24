@@ -61,9 +61,9 @@ const STAGES = [
         photo: '/photos/stage0/item-8.jpg',
       },
       {
-        n: 'Мини-тоннель',
-        size: '1500 × 800 × 800 мм',
-        note: 'Проходной, с окошками по бокам.',
+        n: 'Скамья',
+        size: '600 × 2000 × 890 мм',
+        note: 'Арт. ДП-2',
         photo: '/photos/stage0/item-9.jpg',
       },
     ],
