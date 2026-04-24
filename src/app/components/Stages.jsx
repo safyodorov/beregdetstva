@@ -93,90 +93,101 @@ const STAGES = [
 
 function EquipCarousel({ items, stage }) {
   const railRef = useRef(null);
+  const [pageSize, setPageSize] = useState(4);
   const [page, setPage] = useState(0);
-  const [pageCount, setPageCount] = useState(1);
 
-  const recalc = () => {
-    const el = railRef.current;
-    if (!el) return;
-    const cardW = el.firstChild ? el.firstChild.getBoundingClientRect().width : el.clientWidth;
-    const perView = Math.max(1, Math.round(el.clientWidth / cardW));
-    setPageCount(Math.max(1, Math.ceil(items.length / perView)));
-    setPage(Math.round(el.scrollLeft / (cardW * perView)));
-  };
+  useEffect(() => {
+    const mm = window.matchMedia('(max-width: 820px)');
+    const update = () => setPageSize(mm.matches ? 1 : 4);
+    update();
+    mm.addEventListener('change', update);
+    return () => mm.removeEventListener('change', update);
+  }, []);
+
+  const pages = [];
+  for (let i = 0; i < items.length; i += pageSize) {
+    pages.push(items.slice(i, i + pageSize));
+  }
+  const pageCount = pages.length;
+
+  useEffect(() => {
+    setPage(0);
+    if (railRef.current) railRef.current.scrollTo({ left: 0 });
+  }, [pageSize]);
 
   useEffect(() => {
     const el = railRef.current;
     if (!el) return;
-    recalc();
-    const onScroll = () => recalc();
-    el.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', recalc);
-    return () => {
-      el.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', recalc);
+    const onScroll = () => {
+      const w = el.clientWidth || 1;
+      setPage(Math.round(el.scrollLeft / w));
     };
-  }, [items.length]);
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
-  const scrollBy = (dir) => {
+  const scrollByPages = (dir) => {
     const el = railRef.current;
     if (!el) return;
-    const cardW = el.firstChild ? el.firstChild.getBoundingClientRect().width : el.clientWidth;
-    const perView = Math.max(1, Math.round(el.clientWidth / cardW));
-    const gap = 14;
-    el.scrollBy({ left: dir * (cardW + gap) * perView, behavior: 'smooth' });
+    el.scrollBy({ left: dir * el.clientWidth, behavior: 'smooth' });
   };
 
   return (
     <div className="equip-carousel">
       <div className="equip-carousel__rail" ref={railRef}>
-        {items.map((it, i) => (
-          <div key={i} className="equip-card">
-            <div
-              className="equip-card__photo"
-              style={
-                it.photo
-                  ? undefined
-                  : { background: `linear-gradient(135deg, ${stage.colour}22, ${stage.colour}08)` }
-              }
-            >
-              {it.photo ? (
-                <img src={it.photo} alt={it.n} loading="lazy" />
-              ) : (
-                <EquipIcon idx={i} colour={stage.colour} />
-              )}
-            </div>
-            <div className="equip-card__body">
-              <div className="equip-card__name serif">{it.n}</div>
-              {it.size && <div className="equip-card__size mono">{it.size}</div>}
-              {it.note && <div className="equip-card__note">{it.note}</div>}
-            </div>
+        {pages.map((pg, pi) => (
+          <div key={pi} className="equip-carousel__page">
+            {pg.map((it, i) => (
+              <div key={i} className="equip-card">
+                <div
+                  className="equip-card__photo"
+                  style={
+                    it.photo
+                      ? undefined
+                      : { background: `linear-gradient(135deg, ${stage.colour}22, ${stage.colour}08)` }
+                  }
+                >
+                  {it.photo ? (
+                    <img src={it.photo} alt={it.n} loading="lazy" />
+                  ) : (
+                    <EquipIcon idx={i} colour={stage.colour} />
+                  )}
+                </div>
+                <div className="equip-card__body">
+                  <div className="equip-card__name serif">{it.n}</div>
+                  {it.size && <div className="equip-card__size mono">{it.size}</div>}
+                  {it.note && <div className="equip-card__note">{it.note}</div>}
+                </div>
+              </div>
+            ))}
           </div>
         ))}
       </div>
-      <div className="equip-carousel__controls">
-        <button
-          type="button"
-          className="equip-carousel__btn"
-          aria-label="Назад"
-          onClick={() => scrollBy(-1)}
-          disabled={page <= 0}
-        >
-          ‹
-        </button>
-        <div className="equip-carousel__dots mono">
-          {page + 1} / {pageCount}
+      {pageCount > 1 && (
+        <div className="equip-carousel__controls">
+          <button
+            type="button"
+            className="equip-carousel__btn"
+            aria-label="Назад"
+            onClick={() => scrollByPages(-1)}
+            disabled={page <= 0}
+          >
+            ‹
+          </button>
+          <div className="equip-carousel__dots mono">
+            {page + 1} / {pageCount}
+          </div>
+          <button
+            type="button"
+            className="equip-carousel__btn"
+            aria-label="Вперёд"
+            onClick={() => scrollByPages(1)}
+            disabled={page >= pageCount - 1}
+          >
+            ›
+          </button>
         </div>
-        <button
-          type="button"
-          className="equip-carousel__btn"
-          aria-label="Вперёд"
-          onClick={() => scrollBy(1)}
-          disabled={page >= pageCount - 1}
-        >
-          ›
-        </button>
-      </div>
+      )}
     </div>
   );
 }
