@@ -13,9 +13,9 @@ const STAGES = [
     photoSchema: '/photos/stage0/plan.jpg',
     items: [
       {
-        n: 'Песочница «Лодочка»',
-        size: '2400 × 2400 × 400 мм',
-        note: 'С бортиком из лиственницы и крышкой-скамьёй.',
+        n: 'Качели двухсекционные',
+        size: '5330 × 2525 × 2355',
+        note: 'Артикул: 108.63.00',
         photo: '/photos/stage0/item-1.jpg',
       },
       {
