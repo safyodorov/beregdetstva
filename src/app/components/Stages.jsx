@@ -49,9 +49,9 @@ const STAGES = [
         photo: '/photos/stage0/item-6.jpg',
       },
       {
-        n: 'Песочный столик',
-        size: '1200 × 800 × 550 мм',
-        note: 'С отсеком и крышкой на случай дождя.',
+        n: 'Шагоход',
+        size: '2510 × 2060 × 150 мм',
+        note: 'Арт. 057.87.00',
         photo: '/photos/stage0/item-7.jpg',
       },
       {
