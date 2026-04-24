@@ -13,7 +13,7 @@ const STAGES = [
     photoSchema: '/photos/stage0/plan.jpg',
     items: [
       {
-        n: 'Качели двухсекционные',
+        n: 'Качели двухсекционные «Гнездо»',
         size: '5330 × 2525 × 2355',
         note: 'Артикул: 108.63.00',
         photo: '/photos/stage0/item-1.jpg',
