@@ -299,9 +299,7 @@ export default function Stages() {
               </div>
               <div className="timeline__label">
                 <div className="mono">{s.period}</div>
-                <div className="timeline__label-title serif">
-                  {s.title.split(' ').slice(0, 3).join(' ')}…
-                </div>
+                <div className="timeline__label-title serif">{s.title}</div>
               </div>
             </button>
           ))}
