@@ -78,8 +78,8 @@ const STAGES = [
     photoSchema: '/photos/stage1/plan.jpg',
     items: [
       { n: 'Круглый парковый диван', size: '2154 × 2157 × 745 мм', note: 'Арт. 11354', photo: '/photos/stage1/item-1.jpg' },
-      { n: 'Качели двойные', size: '3200 × 1800 × 2200 мм', note: 'С резиновым покрытием под сиденьями.', photo: '/photos/stage1/item-2.jpg' },
-      { n: 'Балансир-брёвна', size: '3000 × 400 мм', note: 'Переход между зонами.', photo: '/photos/stage1/item-3.jpg' },
+      { n: 'Игровой комплекс «Катер»', size: '6950 × 5505 × 3365 мм', note: 'Арт. 101.104.00', photo: '/photos/stage1/item-2.jpg' },
+      { n: 'Игровой комплекс', size: '6590 × 5505 × 3365 мм', note: 'Арт. 101.104.00', photo: '/photos/stage1/item-3.jpg' },
       { n: 'Счёты уличные', size: '1000 × 200 × 1100 мм', note: 'Для малышей и бабушек.', photo: '/photos/stage1/item-4.jpg' },
     ],
   },
