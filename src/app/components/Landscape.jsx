@@ -181,7 +181,7 @@ export default function Landscape() {
                 <li key={i}>{line}</li>
               ))}
             </ul>
-            <div className="year-assortment__stamp seal">подписано · {data.year}</div>
+            <div className="year-assortment__stamp seal">сезон · {data.year}</div>
           </div>
         </div>
 
