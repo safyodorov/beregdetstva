@@ -141,7 +141,7 @@
 
 .rcard__media { padding-top: 14px; min-width: 0; }
 .rcard__body { min-width: 0; }
-.rcard__reels { grid-column: 1 / -1; min-width: 0; padding-top: 24px; }
+.rcard__reels { grid-column: 1 / -1; min-width: 0; padding-top: 24px; order: 100; }
 .rcard__extra {
   grid-column: 1 / -1;
   min-width: 0;
@@ -149,6 +149,7 @@
   width: 100%;
   max-width: 760px;
   margin-inline: auto;
+  order: 99;
 }
 @media (max-width: 900px) {
   .rcard__extra { max-width: none; padding-top: 16px; }
