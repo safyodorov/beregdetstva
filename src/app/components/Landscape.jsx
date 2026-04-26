@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+const SUBBOTNIK_2024 = Array.from({ length: 71 }, (_, i) => `/photos/subbotnik/2024/${i + 1}.jpg`);
 
 const YEARS = [
   {
@@ -24,13 +26,14 @@ const YEARS = [
       'Пузыреплодник калинолистный «Diabolo» — 2 шт.',
       'Ива Шверина — 1 шт.',
     ],
-    photos: [
+    plants: [
       '/photos/spirea-pink.jpg',
       '/photos/lupines-sunset.jpg',
       '/photos/red-leaves-frost.jpg',
       '/photos/playground-summer.jpg',
       '/photos/playground-day.jpg',
     ],
+    subbotniks: SUBBOTNIK_2024,
   },
   {
     year: '2025',
@@ -52,13 +55,14 @@ const YEARS = [
       'Сирень «Знамя Ленина» — 1 шт.',
       'Берёза плакучая «Schneverdingen Goldbirke» — 1 шт.',
     ],
-    photos: [
+    plants: [
       '/photos/swings-through-trees.jpg',
       '/photos/playground-summer.jpg',
       '/photos/spirea-pink.jpg',
       '/photos/red-leaves-frost.jpg',
       '/photos/lupines-sunset.jpg',
     ],
+    subbotniks: [],
   },
   {
     year: '2026',
@@ -81,37 +85,165 @@ const YEARS = [
       'Клён татарский «Ginnala» — 3 шт.',
       'Клён остролистный «Royal Red» — 1 шт.',
     ],
-    photos: [
+    plants: [
       '/photos/lupines-sunset.jpg',
       '/photos/playground-day.jpg',
       '/photos/playground-sunset.jpg',
       '/photos/swings-through-trees.jpg',
       '/photos/playground-night.jpg',
     ],
+    subbotniks: [],
   },
 ];
 
-function MasonryGallery({ photos }) {
+function Lightbox({ photos, index, onClose, onPrev, onNext }) {
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+      else if (e.key === 'ArrowLeft') onPrev();
+      else if (e.key === 'ArrowRight') onNext();
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose, onPrev, onNext]);
+
+  const btnStyle = (pos) => ({
+    position: 'absolute',
+    width: 48,
+    height: 48,
+    borderRadius: '50%',
+    border: '1px solid rgba(255,245,232,0.3)',
+    background: 'rgba(20,8,6,0.5)',
+    color: '#fff5e8',
+    fontSize: 22,
+    cursor: 'pointer',
+    display: 'grid',
+    placeItems: 'center',
+    backdropFilter: 'blur(4px)',
+    WebkitBackdropFilter: 'blur(4px)',
+    ...pos,
+  });
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 200,
+        background: 'rgba(10, 5, 6, 0.92)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 'clamp(20px, 4vw, 60px)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+      }}
+    >
+      <button type="button" aria-label="Закрыть" onClick={onClose} style={btnStyle({ top: 20, right: 20 })}>
+        ✕
+      </button>
+      <button
+        type="button"
+        aria-label="Предыдущее"
+        onClick={(e) => { e.stopPropagation(); onPrev(); }}
+        style={btnStyle({ top: '50%', left: 20, transform: 'translateY(-50%)' })}
+      >
+        ‹
+      </button>
+      <button
+        type="button"
+        aria-label="Следующее"
+        onClick={(e) => { e.stopPropagation(); onNext(); }}
+        style={btnStyle({ top: '50%', right: 20, transform: 'translateY(-50%)' })}
+      >
+        ›
+      </button>
+      <img
+        src={photos[index]}
+        alt=""
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          objectFit: 'contain',
+          boxShadow: '0 30px 80px rgba(0,0,0,0.6)',
+          borderRadius: 6,
+        }}
+      />
+      <div
+        className="mono"
+        style={{
+          position: 'absolute',
+          bottom: 24,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          color: '#fff5e8',
+          fontSize: 11,
+          letterSpacing: '0.18em',
+          opacity: 0.75,
+        }}
+      >
+        {index + 1} / {photos.length}
+      </div>
+    </div>
+  );
+}
+
+function MasonryGallery({ plants, subbotniks, onOpen }) {
+  const cells = [];
+  plants.slice(0, 3).forEach((p) => cells.push({ src: p, kind: 'plants', label: 'Растения' }));
+  if (subbotniks.length > 0) {
+    subbotniks.slice(0, 2).forEach((p) => cells.push({ src: p, kind: 'subbotniks', label: 'Субботник' }));
+  } else {
+    plants.slice(3, 5).forEach((p) => cells.push({ src: p, kind: 'plants', label: 'Растения' }));
+  }
+
   return (
     <div className="masonry">
-      {photos.map((p, i) => (
-        <div
-          key={p + i}
-          className={`masonry__cell masonry__cell--${i % 5}`}
-          style={{ animationDelay: `${i * 0.1}s` }}
-        >
-          <div className="photo">
-            <img src={p} alt="" loading="lazy" />
-          </div>
-        </div>
-      ))}
+      {cells.map((c, i) => {
+        const list = c.kind === 'plants' ? plants : subbotniks;
+        return (
+          <button
+            key={i}
+            type="button"
+            className={`masonry__cell masonry__cell--${i}`}
+            onClick={() => onOpen(c.kind, 0)}
+            style={{ animationDelay: `${i * 0.1}s` }}
+          >
+            <div className="photo">
+              <img src={c.src} alt={c.label} loading="lazy" />
+              <div className="masonry__badge mono">
+                <span>{c.label}</span>
+                {list.length > 1 && <span className="masonry__count">+{list.length - 1}</span>}
+              </div>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
 
 export default function Landscape() {
   const [y, setY] = useState(1);
+  const [lb, setLb] = useState(null);
   const data = YEARS[y];
+
+  const openLightbox = (kind, index) => {
+    const photos = kind === 'plants' ? data.plants : data.subbotniks;
+    setLb({ photos, index });
+  };
+  const closeLb = () => setLb(null);
+  const prevLb = () => setLb((s) => s && { ...s, index: (s.index - 1 + s.photos.length) % s.photos.length });
+  const nextLb = () => setLb((s) => s && { ...s, index: (s.index + 1) % s.photos.length });
 
   return (
     <section id="landscape" className="section section--landscape" data-screen-label="03 Ландшафт">
@@ -185,8 +317,11 @@ export default function Landscape() {
           </div>
         </div>
 
-        <MasonryGallery photos={data.photos} />
+        <MasonryGallery plants={data.plants} subbotniks={data.subbotniks} onOpen={openLightbox} />
       </div>
+      {lb && (
+        <Lightbox photos={lb.photos} index={lb.index} onClose={closeLb} onPrev={prevLb} onNext={nextLb} />
+      )}
     </section>
   );
 }
