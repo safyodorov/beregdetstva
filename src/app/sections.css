@@ -1041,11 +1041,40 @@ html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0;
   gap: 14px;
 }
 .gallery-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.gallery-row__main {
   display: grid;
   grid-template-columns: 36px 1fr 36px;
   gap: 12px;
   align-items: center;
   min-width: 0;
+}
+.gallery-row__dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+.gallery-row__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease, width 200ms ease;
+}
+.gallery-row__dot:hover { background: var(--accent); }
+.gallery-row__dot.is-active {
+  background: var(--accent);
+  width: 22px;
+  border-radius: 999px;
 }
 .gallery-row__nav {
   width: 36px;
@@ -1276,7 +1305,7 @@ html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0;
 }
 @media (max-width: 820px) {
   .section--landscape { padding-bottom: clamp(40px, 7vh, 80px); }
-  .gallery-row {
+  .gallery-row__main {
     grid-template-columns: 1fr;
     gap: 8px;
   }

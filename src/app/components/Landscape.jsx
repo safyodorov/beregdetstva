@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Lightbox from './Lightbox';
 
 // buildGroup(year, dir, name, photoCount, videoIndices?)
@@ -156,65 +156,105 @@ const YEARS = [
   },
 ];
 
-function GalleryRow({ photos, captions, badges, kind, label, perView, onOpen }) {
+function GalleryRow({ photos, captions, badges, kind, label, perView, onOpen, showDots }) {
   const railRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  const cellStep = () => {
+    const el = railRef.current;
+    if (!el) return 0;
+    const first = el.firstChild;
+    if (!first) return 0;
+    return first.getBoundingClientRect().width + 14;
+  };
 
   const scrollByOne = (dir) => {
     const el = railRef.current;
     if (!el) return;
-    const first = el.firstChild;
-    if (!first) return;
-    const cellW = first.getBoundingClientRect().width;
-    const gap = 14;
-    el.scrollBy({ left: dir * (cellW + gap), behavior: 'smooth' });
+    el.scrollBy({ left: dir * cellStep(), behavior: 'smooth' });
   };
+
+  const goTo = (i) => {
+    const el = railRef.current;
+    if (!el) return;
+    el.scrollTo({ left: i * cellStep(), behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const step = cellStep();
+      if (!step) return;
+      setActiveIdx(Math.round(el.scrollLeft / step));
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <div className={`gallery-row gallery-row--${kind}`} style={{ '--per-view': perView }}>
-      <button
-        type="button"
-        className="gallery-row__nav gallery-row__nav--prev"
-        aria-label="Предыдущее"
-        onClick={() => scrollByOne(-1)}
-      >
-        ‹
-      </button>
-      <div className="gallery-row__viewport" ref={railRef}>
-        {photos.map((p, i) => {
-          const badgeText = badges?.[i] || label;
-          return (
+      <div className="gallery-row__main">
+        <button
+          type="button"
+          className="gallery-row__nav gallery-row__nav--prev"
+          aria-label="Предыдущее"
+          onClick={() => scrollByOne(-1)}
+        >
+          ‹
+        </button>
+        <div className="gallery-row__viewport" ref={railRef}>
+          {photos.map((p, i) => {
+            const badgeText = badges?.[i] || label;
+            return (
+              <button
+                key={i}
+                type="button"
+                className="gallery-row__cell"
+                onClick={() => onOpen(kind, i)}
+              >
+                <img src={p} alt={captions?.[i] || badgeText} loading="lazy" />
+                {badgeText && (
+                  <div className="gallery-row__badge mono">
+                    <span>{badgeText}</span>
+                    {!badges && photos.length > 1 && (
+                      <span className="gallery-row__count">
+                        {i + 1}/{photos.length}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {captions?.[i] && (
+                  <div className="gallery-row__caption">{captions[i]}</div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        <button
+          type="button"
+          className="gallery-row__nav gallery-row__nav--next"
+          aria-label="Следующее"
+          onClick={() => scrollByOne(1)}
+        >
+          ›
+        </button>
+      </div>
+      {showDots && photos.length > 1 && (
+        <div className="gallery-row__dots" role="tablist" aria-label="Группы">
+          {photos.map((_, i) => (
             <button
               key={i}
               type="button"
-              className="gallery-row__cell"
-              onClick={() => onOpen(kind, i)}
-            >
-              <img src={p} alt={captions?.[i] || badgeText} loading="lazy" />
-              {badgeText && (
-                <div className="gallery-row__badge mono">
-                  <span>{badgeText}</span>
-                  {!badges && photos.length > 1 && (
-                    <span className="gallery-row__count">
-                      {i + 1}/{photos.length}
-                    </span>
-                  )}
-                </div>
-              )}
-              {captions?.[i] && (
-                <div className="gallery-row__caption">{captions[i]}</div>
-              )}
-            </button>
-          );
-        })}
-      </div>
-      <button
-        type="button"
-        className="gallery-row__nav gallery-row__nav--next"
-        aria-label="Следующее"
-        onClick={() => scrollByOne(1)}
-      >
-        ›
-      </button>
+              role="tab"
+              aria-selected={i === activeIdx}
+              aria-label={captions?.[i] || `${i + 1}`}
+              className={`gallery-row__dot ${i === activeIdx ? 'is-active' : ''}`}
+              onClick={() => goTo(i)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -352,6 +392,7 @@ export default function Landscape() {
                 label={null}
                 perView={2}
                 onOpen={openLightbox}
+                showDots
               />
             ))}
         </div>
