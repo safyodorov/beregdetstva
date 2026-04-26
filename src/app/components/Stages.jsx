@@ -387,7 +387,7 @@ export default function Stages() {
                 </a>
               </div>
             ) : (
-              <EquipCarousel items={stage.items} stage={stage} />
+              <EquipCarousel key={stage.id} items={stage.items} stage={stage} />
             )}
           </div>
         </div>
