@@ -6,6 +6,7 @@ const NAV_LINKS = [
   ['#history', 'История'],
   ['#stages', 'Этапы'],
   ['#landscape', 'Ландшафт'],
+  ['#resources', 'Ресурсы'],
   ['#team', 'Команда'],
   ['#thanks', 'Спасибо'],
 ];

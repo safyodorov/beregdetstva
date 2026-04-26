@@ -1,0 +1,519 @@
+/* ========== RESOURCES (05) ========== */
+.section--resources { background: var(--paper); position: relative; }
+.section--resources::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(122,31,31,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 0% 100%, rgba(56,92,62,0.05) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.rcards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(64px, 9vh, 140px);
+  position: relative;
+}
+/* Vertical connecting line */
+.rcards::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 60px; bottom: 60px;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, var(--line) 0, var(--line) 4px, transparent 4px, transparent 10px);
+  opacity: 0.5;
+}
+@media (max-width: 900px) {
+  .rcards::before { left: 32px; }
+}
+
+.rcard {
+  position: relative;
+  display: grid;
+  grid-template-columns: 90px 1fr 1fr;
+  gap: clamp(20px, 3vw, 48px);
+  align-items: start;
+}
+.rcard--right { grid-template-columns: 90px 1fr 1fr; }
+.rcard--right .rcard__body { order: 3; }
+.rcard--right .rcard__media { order: 2; }
+
+.rcard__num {
+  font-size: clamp(64px, 7vw, 110px);
+  line-height: 0.85;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--rcard-accent);
+  opacity: 0.85;
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+  padding: 8px 0;
+}
+.rcard__num::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 100%;
+  transform: translateX(-50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--rcard-accent);
+  margin-top: 8px;
+}
+
+.rcard__body { padding-top: 14px; }
+.rcard__kicker {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rcard-accent);
+  margin-bottom: 10px;
+}
+.rcard__title {
+  font-size: clamp(32px, 3.6vw, 56px);
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+.rcard__text {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 50ch;
+  margin: 0 0 22px;
+}
+
+.rcard__badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 14px 18px 12px;
+  border: 1px solid var(--rcard-accent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--rcard-accent) 6%, transparent);
+}
+.rcard__badge-value {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 600;
+  color: var(--rcard-accent);
+  letter-spacing: -0.02em;
+}
+.rcard__badge-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.rcard__years {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+.rcard__year {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px;
+  border: 1px solid var(--rcard-accent);
+  border-radius: 4px;
+  min-width: 84px;
+}
+.rcard__year-num {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--rcard-accent);
+  letter-spacing: -0.01em;
+}
+.rcard__year-mark {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.rcard__media { padding-top: 14px; }
+
+/* TV / video player frame */
+.rmedia { display: flex; flex-direction: column; gap: 8px; }
+.rmedia__frame {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #1a0f0a;
+  box-shadow: var(--shadow-card);
+  aspect-ratio: 16/9;
+}
+.rmedia__chrome {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 26px;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  z-index: 2;
+}
+.rmedia__chrome-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+}
+.rmedia__chrome-text {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.7);
+  margin-left: 6px;
+}
+.rmedia__body { position: absolute; inset: 0; }
+.rmedia__body--tv {
+  background: linear-gradient(180deg, #2a1810 0%, #0a0506 100%);
+}
+.rmedia__static {
+  position: absolute; inset: 26px 0 0 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px);
+  opacity: 0.5;
+}
+.rmedia__bars {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0;
+  width: 60%;
+  height: 26%;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.rmedia__bars span {
+  flex: 1;
+  height: 100%;
+  opacity: 0.85;
+}
+.rmedia__play {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 250, 242, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  cursor: pointer;
+  z-index: 3;
+}
+.rmedia__play svg { width: 22px; height: 22px; fill: var(--ink); margin-left: 3px; }
+.rmedia__live {
+  position: absolute;
+  top: 36px; left: 14px;
+  background: #c24a4a;
+  color: #fff;
+  padding: 4px 8px 3px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  z-index: 3;
+}
+.rmedia__duration {
+  position: absolute;
+  bottom: 12px; right: 14px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 3px 7px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  z-index: 3;
+}
+.rmedia__caption {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  padding-left: 2px;
+}
+
+/* Ceremony photo placeholder */
+.rmedia__frame--photo { background: #f0e3cf; }
+.rmedia__photo-ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rmedia__photo-ph svg {
+  width: 100%; height: 100%;
+  display: block;
+}
+.rmedia__photo-stamp {
+  position: absolute;
+  bottom: 12px; right: 12px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+/* Reels carousel */
+.rreels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rreels__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rreels__title { color: var(--ink); font-weight: 600; }
+.rreels__count { color: var(--ink-soft); }
+
+.rreels__track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 0 12px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-soft) transparent;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.rreels__track::-webkit-scrollbar { height: 5px; }
+.rreels__track::-webkit-scrollbar-thumb { background: var(--ink-soft); border-radius: 3px; }
+
+.rreel {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+.rreel--v { width: 130px; }
+.rreel--h { width: 280px; }
+
+.rreel__inner {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--reel-accent) 35%, #1a0a0a) 0%, #0a0506 100%);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+.rreel--v .rreel__inner { aspect-ratio: 9/16; }
+.rreel--h .rreel__inner { aspect-ratio: 16/9; }
+.rreel__inner:hover { transform: translateY(-3px); }
+
+.rreel__noise {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 4px),
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);
+}
+.rreel__num {
+  position: absolute;
+  top: 10px; left: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(255, 250, 242, 0.85);
+  letter-spacing: -0.02em;
+  z-index: 2;
+}
+.rreel__play {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 250, 242, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  z-index: 2;
+}
+.rreel__play--big { width: 56px; height: 56px; }
+.rreel__play svg { width: 14px; height: 14px; fill: #1a0a0a; margin-left: 2px; }
+.rreel__play--big svg { width: 20px; height: 20px; margin-left: 3px; }
+
+.rreel__waveform {
+  position: absolute;
+  bottom: 36px; left: 10px; right: 10px;
+  height: 30px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  z-index: 2;
+}
+.rreel__waveform span {
+  flex: 1;
+  background: rgba(255, 250, 242, 0.55);
+  border-radius: 1px;
+}
+
+.rreel__tag {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  background: rgba(0,0,0,0.5);
+  color: rgba(255, 250, 242, 0.85);
+  padding: 3px 6px;
+  border-radius: 2px;
+  z-index: 2;
+}
+.rreel__duration {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 2px;
+  z-index: 2;
+}
+.rreel__caption {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 250, 242, 0.85);
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+/* Person card (admin) */
+.rperson {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+.rperson__portrait {
+  position: relative;
+  aspect-ratio: 3/4;
+  background: color-mix(in srgb, var(--rperson-accent) 8%, var(--paper));
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--rperson-accent) 25%, transparent);
+}
+.rperson__circle {
+  position: absolute;
+  left: 50%; top: 42%;
+  transform: translate(-50%, -50%);
+  width: 64%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--rperson-accent) 18%, var(--paper));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rperson__init {
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--rperson-accent);
+  letter-spacing: -0.02em;
+}
+.rperson__tape {
+  position: absolute;
+  bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper);
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+.rperson__meta { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
+.rperson__name {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.rperson__role {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rperson-accent);
+}
+.rperson__quote {
+  font-size: 18px;
+  line-height: 1.4;
+  font-style: italic;
+  color: var(--ink);
+  margin-top: 10px;
+  position: relative;
+  padding-left: 16px;
+  border-left: 2px solid var(--rperson-accent);
+}
+.rperson__qmark { color: var(--rperson-accent); font-style: normal; opacity: 0.6; }
+
+/* Bridge to Team */
+.rcard--bridge .rcard__media {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.rcard__bridge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 32px;
+  border: 1px dashed var(--rcard-accent);
+  border-radius: var(--radius);
+  width: 100%;
+  background: color-mix(in srgb, var(--rcard-accent) 4%, transparent);
+}
+.rcard__bridge-arrow {
+  font-size: 42px;
+  color: var(--rcard-accent);
+  line-height: 1;
+  animation: bridgeBob 2.2s ease-in-out infinite;
+}
+@keyframes bridgeBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+.rcard__bridge-link {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rcard-accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rcard-accent);
+  padding-bottom: 2px;
+}
+
+@media (max-width: 900px) {
+  .rcard, .rcard--right {
+    grid-template-columns: 60px 1fr;
+  }
+  .rcard__media { grid-column: 1 / -1; padding-left: 60px; }
+  .rcard--right .rcard__body { order: 2; }
+  .rcard--right .rcard__media { order: 3; }
+  .rcard__num { font-size: 56px; padding: 4px 0; }
+  .rperson { grid-template-columns: 110px 1fr; }
+}

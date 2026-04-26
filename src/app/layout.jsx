@@ -1,5 +1,6 @@
 import './styles.css';
 import './sections.css';
+import './resources.css';
 
 export const metadata = {
   title: 'Берег Детства — ТОС Новая Дерябиха',
