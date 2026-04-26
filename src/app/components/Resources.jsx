@@ -248,14 +248,16 @@ function ResourcePerson({ person, accent }) {
   return (
     <div className="rperson" style={{ '--rperson-accent': accent }}>
       <div className="rperson__portrait">
-        <div className="rperson__circle">
-          {person.photo ? (
-            <img src={person.photo} alt={person.name} className="rperson__img" loading="lazy" />
-          ) : (
-            <span className="rperson__init serif">{initials}</span>
-          )}
-        </div>
-        {!person.photo && <div className="rperson__tape mono">фото будет здесь</div>}
+        {person.photo ? (
+          <img src={person.photo} alt={person.name} className="rperson__img" loading="lazy" />
+        ) : (
+          <>
+            <div className="rperson__circle">
+              <span className="rperson__init serif">{initials}</span>
+            </div>
+            <div className="rperson__tape mono">фото будет здесь</div>
+          </>
+        )}
       </div>
       <div className="rperson__meta">
         <div className="rperson__name serif">{person.name}</div>
