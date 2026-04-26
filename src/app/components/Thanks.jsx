@@ -57,9 +57,6 @@ export default function Thanks() {
           <div className="footer__col">
             <div className="mono footer__label">Связь</div>
             <div>
-              <a href="mailto:tos@bereg-detstva.ru">tos@bereg-detstva.ru</a>
-            </div>
-            <div>
               <a href="https://новаядерябиха.рф">новаядерябиха.рф</a>
             </div>
           </div>

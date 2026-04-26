@@ -384,7 +384,7 @@ export default function Stages() {
                   Напишите нам, каким должен быть <em>пятый этап</em>. Идея соседей превращается в
                   проект, а проект — в реальность.
                 </p>
-                <a className="btn btn--primary" href="mailto:tos@bereg-detstva.ru">
+                <a className="btn btn--primary" href="#thanks">
                   Предложить идею
                 </a>
               </div>
