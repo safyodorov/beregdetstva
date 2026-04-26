@@ -283,21 +283,24 @@ function ResourceCard({ r, idx }) {
         <h3 className="rcard__title serif">{r.title}</h3>
         <p className="rcard__text">{r.body}</p>
 
-        {r.badge && (
-          <div className="rcard__badge">
-            <div className="rcard__badge-value serif">{r.badge.value}</div>
-            <div className="rcard__badge-label mono">{r.badge.label}</div>
-          </div>
-        )}
-
-        {r.years && (
-          <div className="rcard__years">
-            {r.years.map(({ y, mark }) => (
-              <div key={y} className="rcard__year">
-                <span className="rcard__year-num serif">{y}</span>
-                <span className="rcard__year-mark mono">{mark}</span>
+        {(r.badge || r.years) && (
+          <div className="rcard__stats">
+            {r.badge && (
+              <div className="rcard__badge">
+                <div className="rcard__badge-value serif">{r.badge.value}</div>
+                <div className="rcard__badge-label mono">{r.badge.label}</div>
               </div>
-            ))}
+            )}
+            {r.years && (
+              <div className="rcard__years">
+                {r.years.map(({ y, mark }) => (
+                  <div key={y} className="rcard__year">
+                    <span className="rcard__year-num serif">{y}</span>
+                    <span className="rcard__year-mark mono">{mark}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

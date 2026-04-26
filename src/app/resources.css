@@ -254,6 +254,16 @@
   object-fit: cover;
   background: #000;
 }
+.rcard__stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin: 16px 0 24px;
+}
+.rcard__stats > .rcard__badge,
+.rcard__stats > .rcard__years { margin: 0; }
+
 .rmedia__frame--photo-real { background: var(--bg-elevated); }
 .rmedia__photo {
   position: absolute;
