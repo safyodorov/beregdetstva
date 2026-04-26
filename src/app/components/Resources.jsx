@@ -9,7 +9,11 @@ const RESOURCES = [
       'ТОС «Новая Дерябиха» — победитель программы 2024, 2025 и 2026 годов. Именно по этой программе на площадке устанавливается всё игровое и парковое оборудование.',
     badge: { value: '3', label: 'победы подряд' },
     accent: '#7a1f1f',
-    years: ['2024', '2025', '2026'],
+    years: [
+      { y: '2024', mark: 'победа' },
+      { y: '2025', mark: 'победа' },
+      { y: '2026', mark: 'победа' },
+    ],
     media: { kind: 'tv', caption: 'Сюжет регионального ТВ', duration: '2:40' },
   },
   {
@@ -18,9 +22,13 @@ const RESOURCES = [
     title: 'Цветущий город',
     body:
       'Победа в 2024 и 2025 годах. По программе ТОС получает посадочный материал, помощь в составлении проекта и мастер-классы по посадке от профессиональных ландшафтных дизайнеров.',
-    badge: { value: '1 200+', label: 'однолетников' },
+    badge: { value: '243', label: 'растения' },
     accent: '#385c3e',
-    years: ['2024', '2025'],
+    years: [
+      { y: '2024', mark: 'победа' },
+      { y: '2025', mark: 'победа' },
+      { y: '2026', mark: 'участвуем снова' },
+    ],
     media: { kind: 'ceremony', caption: 'Получение гранта · 2025', aspect: '16/9' },
     extraMedia: { kind: 'tv', caption: 'Сюжет ТВ о программе', duration: '1:55' },
   },
@@ -236,10 +244,10 @@ function ResourceCard({ r, idx }) {
 
         {r.years && (
           <div className="rcard__years">
-            {r.years.map((y) => (
+            {r.years.map(({ y, mark }) => (
               <div key={y} className="rcard__year">
                 <span className="rcard__year-num serif">{y}</span>
-                <span className="rcard__year-mark mono">победа</span>
+                <span className="rcard__year-mark mono">{mark}</span>
               </div>
             ))}
           </div>
