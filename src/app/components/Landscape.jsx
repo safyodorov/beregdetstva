@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const SUBBOTNIK_2024 = Array.from({ length: 71 }, (_, i) => `/photos/subbotnik/2024/${i + 1}.jpg`);
 
@@ -96,7 +96,9 @@ const YEARS = [
   },
 ];
 
-function Lightbox({ photos, index, onClose, onPrev, onNext }) {
+function Lightbox({ photos, index, onClose, onPrev, onNext, onSelect }) {
+  const stripRef = useRef(null);
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') onClose();
@@ -112,49 +114,33 @@ function Lightbox({ photos, index, onClose, onPrev, onNext }) {
     };
   }, [onClose, onPrev, onNext]);
 
-  const btnStyle = (pos) => ({
-    position: 'absolute',
-    width: 48,
-    height: 48,
-    borderRadius: '50%',
-    border: '1px solid rgba(255,245,232,0.3)',
-    background: 'rgba(20,8,6,0.5)',
-    color: '#fff5e8',
-    fontSize: 22,
-    cursor: 'pointer',
-    display: 'grid',
-    placeItems: 'center',
-    backdropFilter: 'blur(4px)',
-    WebkitBackdropFilter: 'blur(4px)',
-    ...pos,
-  });
+  useEffect(() => {
+    const el = stripRef.current?.children[index];
+    if (el && el.scrollIntoView) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [index]);
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       onClick={onClose}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 200,
-        background: 'rgba(10, 5, 6, 0.92)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 'clamp(20px, 4vw, 60px)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-      }}
+      className="lightbox"
     >
-      <button type="button" aria-label="Закрыть" onClick={onClose} style={btnStyle({ top: 20, right: 20 })}>
+      <button
+        type="button"
+        aria-label="Закрыть"
+        onClick={onClose}
+        className="lightbox__btn lightbox__btn--close"
+      >
         ✕
       </button>
       <button
         type="button"
         aria-label="Предыдущее"
         onClick={(e) => { e.stopPropagation(); onPrev(); }}
-        style={btnStyle({ top: '50%', left: 20, transform: 'translateY(-50%)' })}
+        className="lightbox__btn lightbox__btn--prev"
       >
         ‹
       </button>
@@ -162,36 +148,32 @@ function Lightbox({ photos, index, onClose, onPrev, onNext }) {
         type="button"
         aria-label="Следующее"
         onClick={(e) => { e.stopPropagation(); onNext(); }}
-        style={btnStyle({ top: '50%', right: 20, transform: 'translateY(-50%)' })}
+        className="lightbox__btn lightbox__btn--next"
       >
         ›
       </button>
-      <img
-        src={photos[index]}
-        alt=""
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          maxWidth: '100%',
-          maxHeight: '100%',
-          objectFit: 'contain',
-          boxShadow: '0 30px 80px rgba(0,0,0,0.6)',
-          borderRadius: 6,
-        }}
-      />
-      <div
-        className="mono"
-        style={{
-          position: 'absolute',
-          bottom: 24,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          color: '#fff5e8',
-          fontSize: 11,
-          letterSpacing: '0.18em',
-          opacity: 0.75,
-        }}
-      >
+      <div className="lightbox__counter mono">
         {index + 1} / {photos.length}
+      </div>
+      <div className="lightbox__stage" onClick={(e) => e.stopPropagation()}>
+        <img src={photos[index]} alt="" className="lightbox__img" />
+      </div>
+      <div
+        className="lightbox__strip"
+        ref={stripRef}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {photos.map((p, i) => (
+          <button
+            key={i}
+            type="button"
+            className={`lightbox__thumb ${i === index ? 'is-active' : ''}`}
+            onClick={() => onSelect(i)}
+            aria-label={`Кадр ${i + 1}`}
+          >
+            <img src={p} alt="" loading="lazy" />
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -244,6 +226,7 @@ export default function Landscape() {
   const closeLb = () => setLb(null);
   const prevLb = () => setLb((s) => s && { ...s, index: (s.index - 1 + s.photos.length) % s.photos.length });
   const nextLb = () => setLb((s) => s && { ...s, index: (s.index + 1) % s.photos.length });
+  const selectLb = (i) => setLb((s) => s && { ...s, index: i });
 
   return (
     <section id="landscape" className="section section--landscape" data-screen-label="03 Ландшафт">
@@ -320,7 +303,14 @@ export default function Landscape() {
         <MasonryGallery plants={data.plants} subbotniks={data.subbotniks} onOpen={openLightbox} />
       </div>
       {lb && (
-        <Lightbox photos={lb.photos} index={lb.index} onClose={closeLb} onPrev={prevLb} onNext={nextLb} />
+        <Lightbox
+          photos={lb.photos}
+          index={lb.index}
+          onClose={closeLb}
+          onPrev={prevLb}
+          onNext={nextLb}
+          onSelect={selectLb}
+        />
       )}
     </section>
   );
