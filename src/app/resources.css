@@ -139,7 +139,8 @@
   color: var(--ink-soft);
 }
 
-.rcard__media { padding-top: 14px; }
+.rcard__media { padding-top: 14px; min-width: 0; }
+.rcard__body { min-width: 0; }
 
 /* TV / video player frame */
 .rmedia { display: flex; flex-direction: column; gap: 8px; }
