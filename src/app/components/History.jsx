@@ -74,8 +74,17 @@ const CHAPTERS = [
     t: 'Первый шаг',
     body:
       'Песочница, лавочки, качели. Самое простое оборудование, установленное за один будний день 25 сентября 2023 г. Этот день и стал началом видимых для всех изменений.',
-    photo: '/photos/playground-summer.jpg',
+    photo: '/photos/first-step/1.jpg',
     accent: '#c24a4a',
+    gallery: [
+      '/photos/first-step/1.jpg',
+      '/photos/first-step/2.jpg',
+      '/photos/first-step/3.jpg',
+      '/photos/first-step/4.jpg',
+      '/photos/first-step/5.jpg',
+      '/photos/first-step/6.jpg',
+      '/photos/first-step/7.jpg',
+    ],
   },
   {
     n: '1.7',
