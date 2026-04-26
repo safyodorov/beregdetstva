@@ -333,6 +333,7 @@
   padding: 4px 0 12px;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
+  justify-content: safe center;
   scrollbar-color: var(--ink-soft) transparent;
   margin: 0 -8px;
   padding-left: 8px;
@@ -345,8 +346,8 @@
   flex: 0 0 auto;
   scroll-snap-align: start;
 }
-.rreel--v { width: 130px; }
-.rreel--h { width: 280px; }
+.rreel--v { width: 143px; }
+.rreel--h { width: 308px; }
 
 .rreel__inner {
   position: relative;
