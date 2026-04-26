@@ -95,6 +95,7 @@ function useDragonflyEgg(dotRef) {
 
           timers.push(
             setTimeout(() => {
+              if (dflyEl) dflyEl.classList.remove('dragonfly--hatch');
               const startTime = performance.now();
               const tween = (now) => {
                 if (!dflyEl) return;
@@ -122,7 +123,7 @@ function useDragonflyEgg(dotRef) {
                 requestAnimationFrame(tween);
               };
               requestAnimationFrame(tween);
-            }, 450),
+            }, 520),
           );
 
           timers.push(
