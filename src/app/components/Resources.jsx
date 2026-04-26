@@ -14,7 +14,12 @@ const RESOURCES = [
       { y: '2025', mark: 'победа' },
       { y: '2026', mark: 'победа' },
     ],
-    media: { kind: 'tv', caption: 'Сюжет регионального ТВ', duration: '2:40' },
+    media: {
+      kind: 'video',
+      src: '/photos/resources/local-initiatives.mp4',
+      poster: '/photos/resources/local-initiatives-poster.jpg',
+      caption: 'Сюжет регионального ТВ',
+    },
   },
   {
     n: '02',
@@ -67,6 +72,24 @@ const RESOURCES = [
     isBridge: true,
   },
 ];
+
+function ResourceMediaVideo({ src, poster, caption, accent }) {
+  return (
+    <div className="rmedia rmedia--video" style={{ '--rmedia-accent': accent }}>
+      <div className="rmedia__frame rmedia__frame--video">
+        <video
+          src={src}
+          poster={poster}
+          controls
+          playsInline
+          preload="metadata"
+          className="rmedia__player"
+        />
+      </div>
+      {caption && <div className="rmedia__caption mono">{caption}</div>}
+    </div>
+  );
+}
 
 function ResourceMediaTV({ caption, duration, accent }) {
   return (
@@ -257,6 +280,14 @@ function ResourceCard({ r, idx }) {
       <div className="rcard__media">
         {r.media?.kind === 'tv' && (
           <ResourceMediaTV caption={r.media.caption} duration={r.media.duration} accent={r.accent} />
+        )}
+        {r.media?.kind === 'video' && (
+          <ResourceMediaVideo
+            src={r.media.src}
+            poster={r.media.poster}
+            caption={r.media.caption}
+            accent={r.accent}
+          />
         )}
         {r.media?.kind === 'ceremony' && (
           <ResourceMediaCeremony caption={r.media.caption} accent={r.accent} />
