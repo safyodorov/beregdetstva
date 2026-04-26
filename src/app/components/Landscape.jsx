@@ -3,7 +3,58 @@
 import { useRef, useState } from 'react';
 import Lightbox from './Lightbox';
 
-const SUBBOTNIK_2024 = Array.from({ length: 71 }, (_, i) => `/photos/subbotnik/2024/${i + 1}.jpg`);
+// buildGroup(year, dir, name, photoCount, videoIndices?)
+const buildGroup = (year, dir, name, photoCount, videos = []) => ({
+  name,
+  items: [
+    ...Array.from(
+      { length: photoCount },
+      (_, i) => `/photos/subbotnik/${year}/${dir}/${i + 1}.jpg`,
+    ),
+    ...videos.map((vi) => ({
+      src: `/photos/subbotnik/${year}/${dir}/v${vi}.mp4`,
+      poster: `/photos/subbotnik/${year}/${dir}/v${vi}-poster.jpg`,
+    })),
+  ],
+});
+
+const SUBBOTNIK_2024 = [
+  buildGroup('2024', '01', 'Субботник по посадке', 65),
+  buildGroup('2024', '02', 'Привоз саженцев', 5),
+  buildGroup('2024', '03', 'Финал', 13),
+];
+
+const SUBBOTNIK_2025 = [
+  buildGroup('2025', '01', 'Подготовка проекта', 10),
+  buildGroup('2025', '02', 'Предзащита проекта', 7),
+  buildGroup('2025', '03', 'Защита проекта', 9),
+  buildGroup('2025', '04', 'Привоз саженцев', 19),
+  buildGroup('2025', '05', 'Полив саженцев', 3),
+  buildGroup('2025', '06', 'Привоз плодородного грунта', 2, [1]),
+  buildGroup('2025', '07', 'Ивафест', 9),
+  buildGroup('2025', '08', 'Подготовка посадочных ям для сиреней', 12, [1]),
+  buildGroup('2025', '09', 'Подготовка посадочных ям для спирей грефшейм', 5),
+  buildGroup('2025', '10', 'Планировка участка', 2),
+  buildGroup('2025', '11', 'Субботник по посадке', 95, [1]),
+  buildGroup('2025', '12', 'Посадка клёнов', 5),
+  buildGroup('2025', '13', 'Мульчирование', 13),
+  buildGroup('2025', '14', 'Посадка злаков', 3),
+];
+
+const SUBBOTNIK_2026 = [buildGroup('2026', '01', 'Подготовка', 16)];
+
+const groupCover = (group) => {
+  const first = group.items[0];
+  if (typeof first === 'string') return first;
+  return first.poster || first.src;
+};
+
+const groupBadge = (group) => {
+  const photos = group.items.filter((it) => typeof it === 'string').length;
+  const videos = group.items.length - photos;
+  if (videos > 0) return `${photos} фото · ${videos} видео`;
+  return `${photos} фото`;
+};
 
 const YEARS = [
   {
@@ -37,7 +88,7 @@ const YEARS = [
       '/photos/plants/2024/7.jpg',
       '/photos/plants/2024/8.jpg',
     ],
-    subbotniks: SUBBOTNIK_2024,
+    subbotnikGroups: SUBBOTNIK_2024,
   },
   {
     year: '2025',
@@ -68,7 +119,7 @@ const YEARS = [
       '/photos/plants/2025/6.jpg',
       '/photos/plants/2025/7.jpg',
     ],
-    subbotniks: [],
+    subbotnikGroups: SUBBOTNIK_2025,
   },
   {
     year: '2026',
@@ -101,11 +152,11 @@ const YEARS = [
       '/photos/plants/2026/7.jpg',
       '/photos/plants/2026/8.jpg',
     ],
-    subbotniks: [],
+    subbotnikGroups: SUBBOTNIK_2026,
   },
 ];
 
-function GalleryRow({ photos, captions, kind, label, perView, onOpen }) {
+function GalleryRow({ photos, captions, badges, kind, label, perView, onOpen }) {
   const railRef = useRef(null);
 
   const scrollByOne = (dir) => {
@@ -129,27 +180,32 @@ function GalleryRow({ photos, captions, kind, label, perView, onOpen }) {
         ‹
       </button>
       <div className="gallery-row__viewport" ref={railRef}>
-        {photos.map((p, i) => (
-          <button
-            key={i}
-            type="button"
-            className="gallery-row__cell"
-            onClick={() => onOpen(kind, i)}
-          >
-            <img src={p} alt={captions?.[i] || label} loading="lazy" />
-            <div className="gallery-row__badge mono">
-              <span>{label}</span>
-              {photos.length > 1 && (
-                <span className="gallery-row__count">
-                  {i + 1}/{photos.length}
-                </span>
+        {photos.map((p, i) => {
+          const badgeText = badges?.[i] || label;
+          return (
+            <button
+              key={i}
+              type="button"
+              className="gallery-row__cell"
+              onClick={() => onOpen(kind, i)}
+            >
+              <img src={p} alt={captions?.[i] || badgeText} loading="lazy" />
+              {badgeText && (
+                <div className="gallery-row__badge mono">
+                  <span>{badgeText}</span>
+                  {!badges && photos.length > 1 && (
+                    <span className="gallery-row__count">
+                      {i + 1}/{photos.length}
+                    </span>
+                  )}
+                </div>
               )}
-            </div>
-            {captions?.[i] && (
-              <div className="gallery-row__caption">{captions[i]}</div>
-            )}
-          </button>
-        ))}
+              {captions?.[i] && (
+                <div className="gallery-row__caption">{captions[i]}</div>
+              )}
+            </button>
+          );
+        })}
       </div>
       <button
         type="button"
@@ -169,8 +225,12 @@ export default function Landscape() {
   const data = YEARS[y];
 
   const openLightbox = (kind, index) => {
-    const photos = kind === 'plants' ? data.plants : data.subbotniks;
-    setLb({ photos, index });
+    if (kind === 'plants') {
+      setLb({ photos: data.plants, index, caption: data.assortment[index] || null });
+    } else if (kind === 'subbotniks') {
+      const group = data.subbotnikGroups[index];
+      setLb({ photos: group.items, index: 0, caption: group.name });
+    }
   };
   const closeLb = () => setLb(null);
   const prevLb = () => setLb((s) => s && { ...s, index: (s.index - 1 + s.photos.length) % s.photos.length });
@@ -262,12 +322,14 @@ export default function Landscape() {
             perView={3}
             onOpen={openLightbox}
           />
-          {data.subbotniks.length > 0 && (
+          {data.subbotnikGroups.length > 0 && (
             <GalleryRow
               key={`subbotniks-${data.year}`}
-              photos={data.subbotniks}
+              photos={data.subbotnikGroups.map(groupCover)}
+              captions={data.subbotnikGroups.map((g) => g.name)}
+              badges={data.subbotnikGroups.map(groupBadge)}
               kind="subbotniks"
-              label="Субботники"
+              label={null}
               perView={2}
               onOpen={openLightbox}
             />
@@ -296,6 +358,7 @@ export default function Landscape() {
         <Lightbox
           photos={lb.photos}
           index={lb.index}
+          caption={lb.caption}
           onClose={closeLb}
           onPrev={prevLb}
           onNext={nextLb}

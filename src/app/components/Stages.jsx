@@ -6,7 +6,7 @@ const STAGES = [
   {
     id: 0,
     title: 'Площадка для самых маленьких',
-    period: 'Этап 0',
+    period: 'Этап 0 · 2023 г.',
     colour: '#c24a4a',
     desc:
       'Безопасный островок для детей 1–5 лет: песочница, качалки, мини-кухная, песочница, лабиринт и качелини. Сюда приходят мамы с колясками, родители с малышами, бабушки с внуками.',
@@ -71,7 +71,7 @@ const STAGES = [
   {
     id: 1,
     title: 'Горки и игровые элементы',
-    period: 'Этап 1',
+    period: 'Этап 1 · 2024 г.',
     colour: '#7a1f1f',
     desc:
       'Главный разноцветный комплекс для дошкольников: горки, лабиринт, счёты, мостики. Тот самый, с фотографий.',
@@ -86,7 +86,7 @@ const STAGES = [
   {
     id: 2,
     title: 'Лазалки для детей постарше',
-    period: 'Этап 2',
+    period: 'Этап 2 · 2025 г.',
     colour: '#385c3e',
     desc:
       'Шестигранные призмы с канатами и подвесным мостом. Для детей 7+ и подростков, которым мало «Корабликов».',
@@ -99,7 +99,7 @@ const STAGES = [
   {
     id: 3,
     title: 'Ролики, самокаты, каток',
-    period: 'Этап 3',
+    period: 'Этап 3 · 2025 — 2026 гг.',
     colour: '#6b5ca3',
     desc:
       'Площадка двойного назначения: летом — гладкий асфальт для колёс, зимой — заливается каток.',
@@ -112,7 +112,7 @@ const STAGES = [
   {
     id: 4,
     title: 'Зелёная лагуна и ягодные острова',
-    period: 'Этап 4',
+    period: 'Этап 4 · 2026 г.',
     colour: '#5a8862',
     desc:
       'Островки с жимолостью, смородиной и иргой. Здесь взрослые отдыхают, а дети учатся узнавать растения.',
@@ -126,7 +126,7 @@ const STAGES = [
   {
     id: 5,
     title: '???',
-    period: 'Этап 5',
+    period: 'Этап 5 · 2027 г.',
     colour: '#c9a77b',
     desc:
       'Пятый этап мы пока не придумали. Возможно, сцена для летних концертов. Возможно, аллея или роща. Возможно — то, что предложите вы.',
@@ -307,7 +307,9 @@ export default function Stages() {
         <div className="stage-panel" style={{ '--panel-col': stage.colour }}>
           <div className="stage-panel__head">
             <div className="stage-panel__eyebrow mono">{stage.period}</div>
-            <h3 className="stage-panel__title serif">{stage.title}</h3>
+            <h3 className="stage-panel__title serif" id="stage-panel-title">
+              {stage.title}
+            </h3>
             <p className="stage-panel__desc">{stage.desc}</p>
           </div>
 
@@ -390,6 +392,28 @@ export default function Stages() {
               <EquipCarousel key={stage.id} items={stage.items} stage={stage} />
             )}
           </div>
+        </div>
+
+        <div className="stage-dots" id="stage-dots-bottom" role="tablist" aria-label="Этапы (компактно)">
+          {STAGES.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              role="tab"
+              aria-selected={active === i}
+              aria-label={`${s.period} — ${s.title}`}
+              className={`stage-dots__dot ${active === i ? 'is-active' : ''}`}
+              onClick={() => {
+                setActive(i);
+                document
+                  .getElementById('stage-panel-title')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              style={{ '--dot-col': s.colour }}
+            >
+              {s.id}
+            </button>
+          ))}
         </div>
       </div>
     </section>
