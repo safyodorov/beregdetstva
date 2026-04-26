@@ -34,7 +34,11 @@ const RESOURCES = [
       { y: '2025', mark: 'победа' },
       { y: '2026', mark: 'участвуем снова' },
     ],
-    media: { kind: 'ceremony', caption: 'Получение гранта · 2025', aspect: '16/9' },
+    media: {
+      kind: 'photo',
+      src: '/photos/resources/cvetushij-gorod.jpg',
+      caption: 'Цветущий город',
+    },
     extraMedia: { kind: 'tv', caption: 'Сюжет ТВ о программе', duration: '1:55' },
   },
   {
@@ -72,6 +76,17 @@ const RESOURCES = [
     isBridge: true,
   },
 ];
+
+function ResourceMediaPhoto({ src, caption, accent }) {
+  return (
+    <div className="rmedia rmedia--photo" style={{ '--rmedia-accent': accent }}>
+      <div className="rmedia__frame rmedia__frame--photo-real">
+        <img src={src} alt={caption} loading="lazy" className="rmedia__photo" />
+      </div>
+      {caption && <div className="rmedia__caption mono">{caption}</div>}
+    </div>
+  );
+}
 
 function ResourceMediaVideo({ src, poster, caption, accent }) {
   return (
@@ -288,6 +303,9 @@ function ResourceCard({ r, idx }) {
             caption={r.media.caption}
             accent={r.accent}
           />
+        )}
+        {r.media?.kind === 'photo' && (
+          <ResourceMediaPhoto src={r.media.src} caption={r.media.caption} accent={r.accent} />
         )}
         {r.media?.kind === 'ceremony' && (
           <ResourceMediaCeremony caption={r.media.caption} accent={r.accent} />
