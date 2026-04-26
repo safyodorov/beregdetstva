@@ -743,7 +743,7 @@ html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0;
   gap: clamp(32px, 4vw, 64px);
   margin-bottom: 64px;
 }
-.year-intro__h { font-size: clamp(32px, 3.5vw, 48px); line-height: 1.05; margin-bottom: 16px; }
+.year-intro__h { font-size: clamp(32px, 3.5vw, 48px); line-height: 1.05; margin-bottom: 16px; scroll-margin-top: 80px; }
 .year-intro__desc { font-size: 17px; color: var(--text-muted); margin-bottom: 28px; }
 
 .year-palette { margin-bottom: 28px; }

@@ -206,7 +206,7 @@ export default function Landscape() {
 
         <div className="year-content">
           <div className="year-intro">
-            <h3 className="serif year-intro__h">{data.title}</h3>
+            <h3 className="serif year-intro__h" id="year-intro-h">{data.title}</h3>
             <p className="year-intro__desc">{data.desc}</p>
 
             <div className="year-palette">
@@ -274,9 +274,11 @@ export default function Landscape() {
             <button
               key={yr.year}
               className={`year-tab ${i === y ? 'is-active' : ''}`}
-              onClick={(e) => {
+              onClick={() => {
                 setY(i);
-                e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                document
+                  .getElementById('year-intro-h')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
             >
               <span className="year-tab__year serif">{yr.year}</span>
