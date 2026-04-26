@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Lightbox from './Lightbox';
 
 const CHAPTERS = [
   {
@@ -141,120 +142,6 @@ const CHAPTERS = [
     accent: '#7a1f1f',
   },
 ];
-
-function Lightbox({ photos, index, onClose, onPrev, onNext }) {
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      else if (e.key === 'ArrowLeft') onPrev();
-      else if (e.key === 'ArrowRight') onNext();
-    };
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [onClose, onPrev, onNext]);
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 200,
-        background: 'rgba(10, 5, 6, 0.92)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 'clamp(20px, 4vw, 60px)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-      }}
-    >
-      <button
-        type="button"
-        aria-label="Закрыть"
-        onClick={onClose}
-        style={lbBtnStyle({ top: 20, right: 20 })}
-      >
-        ✕
-      </button>
-      <button
-        type="button"
-        aria-label="Предыдущее фото"
-        onClick={(e) => {
-          e.stopPropagation();
-          onPrev();
-        }}
-        style={lbBtnStyle({ top: '50%', left: 20, transform: 'translateY(-50%)' })}
-      >
-        ‹
-      </button>
-      <button
-        type="button"
-        aria-label="Следующее фото"
-        onClick={(e) => {
-          e.stopPropagation();
-          onNext();
-        }}
-        style={lbBtnStyle({ top: '50%', right: 20, transform: 'translateY(-50%)' })}
-      >
-        ›
-      </button>
-      <img
-        src={photos[index]}
-        alt=""
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          maxWidth: '100%',
-          maxHeight: '100%',
-          objectFit: 'contain',
-          boxShadow: '0 30px 80px rgba(0,0,0,0.6)',
-          borderRadius: 6,
-        }}
-      />
-      <div
-        className="mono"
-        style={{
-          position: 'absolute',
-          bottom: 24,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          color: '#fff5e8',
-          fontSize: 11,
-          letterSpacing: '0.18em',
-          opacity: 0.75,
-        }}
-      >
-        {index + 1} / {photos.length}
-      </div>
-    </div>
-  );
-}
-
-function lbBtnStyle(pos) {
-  return {
-    position: 'absolute',
-    width: 48,
-    height: 48,
-    borderRadius: '50%',
-    border: '1px solid rgba(255,245,232,0.3)',
-    background: 'rgba(20,8,6,0.5)',
-    color: '#fff5e8',
-    fontSize: 22,
-    cursor: 'pointer',
-    display: 'grid',
-    placeItems: 'center',
-    backdropFilter: 'blur(4px)',
-    WebkitBackdropFilter: 'blur(4px)',
-    ...pos,
-  };
-}
 
 function HistoryChapter({ ch, idx }) {
   const ref = useRef(null);
@@ -405,6 +292,7 @@ function HistoryChapter({ ch, idx }) {
           onClose={() => setLbIdx(-1)}
           onPrev={() => setLbIdx((i) => (i - 1 + ch.gallery.length) % ch.gallery.length)}
           onNext={() => setLbIdx((i) => (i + 1) % ch.gallery.length)}
+          onSelect={(i) => setLbIdx(i)}
         />
       )}
     </article>
