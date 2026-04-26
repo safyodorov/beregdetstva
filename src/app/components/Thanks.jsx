@@ -64,7 +64,7 @@ export default function Thanks() {
           <div className="footer__col">
             <div className="mono footer__label">Проект</div>
             <div>берегдетства.рф</div>
-            <div className="footer__year mono">© 2024–2026</div>
+            <div className="footer__year mono">© 2019–2026</div>
           </div>
         </div>
       </footer>
