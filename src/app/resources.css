@@ -263,6 +263,15 @@
   object-fit: cover;
   display: block;
 }
+.rperson__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
 .rmedia__photo-ph {
   position: absolute;
   inset: 0;
