@@ -39,7 +39,12 @@ const RESOURCES = [
       src: '/photos/resources/cvetushij-gorod.jpg',
       caption: 'Цветущий город',
     },
-    extraMedia: { kind: 'tv', caption: 'Сюжет ТВ о программе', duration: '1:55' },
+    extraMedia: {
+      kind: 'video',
+      src: '/photos/resources/cvetushij-gorod.mp4',
+      poster: '/photos/resources/cvetushij-gorod-poster.jpg',
+      caption: 'Сюжет ТВ о программе',
+    },
   },
   {
     n: '03',
@@ -318,6 +323,16 @@ function ResourceCard({ r, idx }) {
             <ResourceMediaTV
               caption={r.extraMedia.caption}
               duration={r.extraMedia.duration}
+              accent={r.accent}
+            />
+          </div>
+        )}
+        {r.extraMedia?.kind === 'video' && (
+          <div style={{ marginTop: 18 }}>
+            <ResourceMediaVideo
+              src={r.extraMedia.src}
+              poster={r.extraMedia.poster}
+              caption={r.extraMedia.caption}
               accent={r.accent}
             />
           </div>
