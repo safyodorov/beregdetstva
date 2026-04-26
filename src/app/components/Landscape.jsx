@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Lightbox from './Lightbox';
 
 const SUBBOTNIK_2024 = Array.from({ length: 71 }, (_, i) => `/photos/subbotnik/2024/${i + 1}.jpg`);
@@ -100,37 +100,60 @@ const YEARS = [
   },
 ];
 
-function MasonryGallery({ plants, subbotniks, onOpen }) {
-  const cells = [];
-  plants.slice(0, 3).forEach((p) => cells.push({ src: p, kind: 'plants', label: 'Растения' }));
-  if (subbotniks.length > 0) {
-    subbotniks.slice(0, 2).forEach((p) => cells.push({ src: p, kind: 'subbotniks', label: 'Субботник' }));
-  } else {
-    plants.slice(3, 5).forEach((p) => cells.push({ src: p, kind: 'plants', label: 'Растения' }));
-  }
+function GalleryRow({ photos, captions, kind, label, perView, onOpen }) {
+  const railRef = useRef(null);
+
+  const scrollByOne = (dir) => {
+    const el = railRef.current;
+    if (!el) return;
+    const first = el.firstChild;
+    if (!first) return;
+    const cellW = first.getBoundingClientRect().width;
+    const gap = 14;
+    el.scrollBy({ left: dir * (cellW + gap), behavior: 'smooth' });
+  };
 
   return (
-    <div className="masonry">
-      {cells.map((c, i) => {
-        const list = c.kind === 'plants' ? plants : subbotniks;
-        return (
+    <div className={`gallery-row gallery-row--${kind}`} style={{ '--per-view': perView }}>
+      <button
+        type="button"
+        className="gallery-row__nav gallery-row__nav--prev"
+        aria-label="Предыдущее"
+        onClick={() => scrollByOne(-1)}
+      >
+        ‹
+      </button>
+      <div className="gallery-row__viewport" ref={railRef}>
+        {photos.map((p, i) => (
           <button
             key={i}
             type="button"
-            className={`masonry__cell masonry__cell--${i}`}
-            onClick={() => onOpen(c.kind, 0)}
-            style={{ animationDelay: `${i * 0.1}s` }}
+            className="gallery-row__cell"
+            onClick={() => onOpen(kind, i)}
           >
-            <div className="photo">
-              <img src={c.src} alt={c.label} loading="lazy" />
-              <div className="masonry__badge mono">
-                <span>{c.label}</span>
-                {list.length > 1 && <span className="masonry__count">+{list.length - 1}</span>}
-              </div>
+            <img src={p} alt={captions?.[i] || label} loading="lazy" />
+            <div className="gallery-row__badge mono">
+              <span>{label}</span>
+              {photos.length > 1 && (
+                <span className="gallery-row__count">
+                  {i + 1}/{photos.length}
+                </span>
+              )}
             </div>
+            {captions?.[i] && (
+              <div className="gallery-row__caption">{captions[i]}</div>
+            )}
           </button>
-        );
-      })}
+        ))}
+      </div>
+      <button
+        type="button"
+        className="gallery-row__nav gallery-row__nav--next"
+        aria-label="Следующее"
+        onClick={() => scrollByOne(1)}
+      >
+        ›
+      </button>
     </div>
   );
 }
@@ -221,7 +244,27 @@ export default function Landscape() {
           </div>
         </div>
 
-        <MasonryGallery plants={data.plants} subbotniks={data.subbotniks} onOpen={openLightbox} />
+        <div className="masonry">
+          <GalleryRow
+            key={`plants-${data.year}`}
+            photos={data.plants}
+            captions={data.assortment}
+            kind="plants"
+            label="Растения"
+            perView={3}
+            onOpen={openLightbox}
+          />
+          {data.subbotniks.length > 0 && (
+            <GalleryRow
+              key={`subbotniks-${data.year}`}
+              photos={data.subbotniks}
+              kind="subbotniks"
+              label="Субботник"
+              perView={2}
+              onOpen={openLightbox}
+            />
+          )}
+        </div>
       </div>
       {lb && (
         <Lightbox
