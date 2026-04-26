@@ -345,9 +345,6 @@ function ResourceCard({ r, idx, onOpenReels }) {
             />
           </div>
         )}
-        {r.reels && (
-          <ResourceReels count={r.reels} accent={r.accent} onOpenReels={onOpenReels} />
-        )}
         {r.person && <ResourcePerson person={r.person} accent={r.accent} />}
         {r.isBridge && (
           <div className="rcard__bridge">
@@ -358,6 +355,12 @@ function ResourceCard({ r, idx, onOpenReels }) {
           </div>
         )}
       </div>
+
+      {r.reels && (
+        <div className="rcard__reels">
+          <ResourceReels count={r.reels} accent={r.accent} onOpenReels={onOpenReels} />
+        </div>
+      )}
     </article>
   );
 }
