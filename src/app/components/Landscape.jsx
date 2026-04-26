@@ -193,7 +193,10 @@ export default function Landscape() {
             <button
               key={yr.year}
               className={`year-tab ${i === y ? 'is-active' : ''}`}
-              onClick={() => setY(i)}
+              onClick={(e) => {
+                setY(i);
+                e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }}
             >
               <span className="year-tab__year serif">{yr.year}</span>
               <span className="year-tab__title">{yr.title}</span>
@@ -271,11 +274,9 @@ export default function Landscape() {
             <button
               key={yr.year}
               className={`year-tab ${i === y ? 'is-active' : ''}`}
-              onClick={() => {
+              onClick={(e) => {
                 setY(i);
-                document
-                  .getElementById('landscape')
-                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
               }}
             >
               <span className="year-tab__year serif">{yr.year}</span>

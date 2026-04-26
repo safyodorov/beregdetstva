@@ -726,6 +726,7 @@ html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0;
   flex-direction: column;
   gap: 4px;
 }
+.year-tab { scroll-margin-top: 80px; scroll-margin-bottom: 20px; }
 .year-tab:hover { transform: translateY(-2px); border-color: var(--accent); }
 .year-tab.is-active {
   background: var(--accent);
