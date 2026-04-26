@@ -52,7 +52,8 @@ export default function Thanks() {
           </div>
           <div className="footer__col">
             <div className="mono footer__label">Адрес</div>
-            <div>с. Богданиха, микрорайон Новая Дерябиха</div>
+            <div>д. Дерябиха</div>
+            <div>Ивановская область</div>
           </div>
           <div className="footer__col">
             <div className="mono footer__label">Связь</div>
