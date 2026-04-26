@@ -322,18 +322,38 @@ export default function Landscape() {
             perView={3}
             onOpen={openLightbox}
           />
-          {data.subbotnikGroups.length > 0 && (
-            <GalleryRow
-              key={`subbotniks-${data.year}`}
-              photos={data.subbotnikGroups.map(groupCover)}
-              captions={data.subbotnikGroups.map((g) => g.name)}
-              badges={data.subbotnikGroups.map(groupBadge)}
-              kind="subbotniks"
-              label={null}
-              perView={2}
-              onOpen={openLightbox}
-            />
-          )}
+          {data.subbotnikGroups.length > 0 &&
+            (data.subbotnikGroups.length === 1 ? (
+              <GalleryRow
+                key={`subbotniks-${data.year}-solo`}
+                photos={data.subbotnikGroups[0].items.slice(0, 2).map((it) =>
+                  typeof it === 'string' ? it : it.poster || it.src,
+                )}
+                captions={data.subbotnikGroups[0].items.slice(0, 2).map(() => data.subbotnikGroups[0].name)}
+                badges={data.subbotnikGroups[0].items.slice(0, 2).map(() => groupBadge(data.subbotnikGroups[0]))}
+                kind="subbotniks"
+                label={null}
+                perView={2}
+                onOpen={(_, i) =>
+                  setLb({
+                    photos: data.subbotnikGroups[0].items,
+                    index: i,
+                    caption: data.subbotnikGroups[0].name,
+                  })
+                }
+              />
+            ) : (
+              <GalleryRow
+                key={`subbotniks-${data.year}`}
+                photos={data.subbotnikGroups.map(groupCover)}
+                captions={data.subbotnikGroups.map((g) => g.name)}
+                badges={data.subbotnikGroups.map(groupBadge)}
+                kind="subbotniks"
+                label={null}
+                perView={2}
+                onOpen={openLightbox}
+              />
+            ))}
         </div>
 
         <div className="year-tabs year-tabs--bottom">
