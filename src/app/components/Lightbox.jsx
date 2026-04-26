@@ -10,6 +10,23 @@ const itemPoster = (it) => (typeof it === 'string' ? null : it.poster);
 
 export default function Lightbox({ photos, index, onClose, onPrev, onNext, onSelect, caption }) {
   const stripRef = useRef(null);
+  const touchStart = useRef(null);
+
+  const onTouchStart = (e) => {
+    if (e.touches.length !== 1) return;
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+  const onTouchEnd = (e) => {
+    if (!touchStart.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx > 0) onPrev();
+      else onNext();
+    }
+  };
 
   useEffect(() => {
     const onKey = (e) => {
@@ -76,7 +93,12 @@ export default function Lightbox({ photos, index, onClose, onPrev, onNext, onSel
           {index + 1} / {photos.length}
         </span>
       </div>
-      <div className="lightbox__stage" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="lightbox__stage"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         {currentIsVideo ? (
           <video
             key={currentSrc}
