@@ -1,5 +1,13 @@
 'use client';
 
+import { useState } from 'react';
+import Lightbox from './Lightbox';
+
+const REELS = Array.from({ length: 8 }, (_, i) => ({
+  src: `/photos/resources/reels/${i + 1}.mp4`,
+  poster: `/photos/resources/reels/${i + 1}-poster.jpg`,
+}));
+
 const RESOURCES = [
   {
     n: '01',
@@ -194,50 +202,36 @@ function ResourceMediaCeremony({ caption, accent }) {
   );
 }
 
-function ResourceReels({ count, accent }) {
+function ResourceReels({ count, accent, onOpenReels }) {
   return (
     <div className="rreels">
       <div className="rreels__header">
         <div className="rreels__title mono">Промо-ролики · ВКонтакте</div>
-        <div className="rreels__count mono">{count} вертикальных + 1 горизонтальный</div>
+        <div className="rreels__count mono">{count} вертикальных</div>
       </div>
       <div className="rreels__track">
-        {Array.from({ length: count }).map((_, i) => (
-          <div key={i} className="rreel rreel--v" style={{ '--reel-accent': accent }}>
+        {REELS.slice(0, count).map((reel, i) => (
+          <button
+            key={i}
+            type="button"
+            className="rreel rreel--v"
+            style={{ '--reel-accent': accent }}
+            onClick={() => onOpenReels(i)}
+            aria-label={`Открыть ролик ${i + 1}`}
+          >
             <div className="rreel__inner">
-              <div className="rreel__noise" />
+              <img src={reel.poster} alt="" className="rreel__poster" loading="lazy" />
+              <div className="rreel__veil" />
               <div className="rreel__num serif">{String(i + 1).padStart(2, '0')}</div>
               <div className="rreel__play">
                 <svg viewBox="0 0 24 24">
                   <path d="M7 5v14l12-7z" />
                 </svg>
               </div>
-              <div className="rreel__waveform">
-                {Array.from({ length: 22 }).map((_, k) => (
-                  <span key={k} style={{ height: `${10 + ((i * 7 + k * 3) % 26)}px` }} />
-                ))}
-              </div>
               <div className="rreel__tag mono">VK · Reel</div>
-              <div className="rreel__duration mono">
-                0:{(15 + i * 4).toString().padStart(2, '0')}
-              </div>
             </div>
-          </div>
+          </button>
         ))}
-        <div className="rreel rreel--h" style={{ '--reel-accent': accent }}>
-          <div className="rreel__inner">
-            <div className="rreel__noise" />
-            <div className="rreel__num serif">+1</div>
-            <div className="rreel__play rreel__play--big">
-              <svg viewBox="0 0 24 24">
-                <path d="M7 5v14l12-7z" />
-              </svg>
-            </div>
-            <div className="rreel__tag mono">VK · горизонтальный</div>
-            <div className="rreel__duration mono">2:18</div>
-            <div className="rreel__caption mono">главный промо-ролик</div>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -276,7 +270,7 @@ function ResourcePerson({ person, accent }) {
   );
 }
 
-function ResourceCard({ r, idx }) {
+function ResourceCard({ r, idx, onOpenReels }) {
   const isLeft = idx % 2 === 0;
   return (
     <article
@@ -351,7 +345,9 @@ function ResourceCard({ r, idx }) {
             />
           </div>
         )}
-        {r.reels && <ResourceReels count={r.reels} accent={r.accent} />}
+        {r.reels && (
+          <ResourceReels count={r.reels} accent={r.accent} onOpenReels={onOpenReels} />
+        )}
         {r.person && <ResourcePerson person={r.person} accent={r.accent} />}
         {r.isBridge && (
           <div className="rcard__bridge">
@@ -367,6 +363,10 @@ function ResourceCard({ r, idx }) {
 }
 
 export default function Resources() {
+  const [lbIdx, setLbIdx] = useState(-1);
+  const openReels = (i) => setLbIdx(i);
+  const closeLb = () => setLbIdx(-1);
+
   return (
     <section id="resources" className="section section--resources" data-screen-label="05 Ресурсы">
       <div className="container">
@@ -387,10 +387,22 @@ export default function Resources() {
 
         <div className="rcards">
           {RESOURCES.map((r, i) => (
-            <ResourceCard key={r.n} r={r} idx={i} />
+            <ResourceCard key={r.n} r={r} idx={i} onOpenReels={openReels} />
           ))}
         </div>
       </div>
+
+      {lbIdx >= 0 && (
+        <Lightbox
+          photos={REELS}
+          index={lbIdx}
+          caption="Промо-ролик ВКонтакте"
+          onClose={closeLb}
+          onPrev={() => setLbIdx((i) => (i - 1 + REELS.length) % REELS.length)}
+          onNext={() => setLbIdx((i) => (i + 1) % REELS.length)}
+          onSelect={(i) => setLbIdx(i)}
+        />
+      )}
     </section>
   );
 }
