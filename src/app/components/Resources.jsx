@@ -55,7 +55,12 @@ const RESOURCES = [
     badge: { value: '300 000+ ₽', label: 'за три года' },
     accent: '#c24a4a',
     reels: 8,
-    media: { kind: 'promo-h', caption: 'Промо-ролик в поддержку проекта', duration: '1:12' },
+    media: {
+      kind: 'video',
+      src: '/photos/resources/sofinansirovanie.mp4',
+      poster: '/photos/resources/sofinansirovanie-poster.jpg',
+      caption: 'Промо-ролик в поддержку проекта',
+    },
   },
   {
     n: '04',
