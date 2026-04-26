@@ -326,25 +326,6 @@ function ResourceCard({ r, idx, onOpenReels }) {
         {r.media?.kind === 'promo-h' && (
           <ResourceMediaTV caption={r.media.caption} duration={r.media.duration} accent={r.accent} />
         )}
-        {r.extraMedia?.kind === 'tv' && (
-          <div style={{ marginTop: 18 }}>
-            <ResourceMediaTV
-              caption={r.extraMedia.caption}
-              duration={r.extraMedia.duration}
-              accent={r.accent}
-            />
-          </div>
-        )}
-        {r.extraMedia?.kind === 'video' && (
-          <div style={{ marginTop: 18 }}>
-            <ResourceMediaVideo
-              src={r.extraMedia.src}
-              poster={r.extraMedia.poster}
-              caption={r.extraMedia.caption}
-              accent={r.accent}
-            />
-          </div>
-        )}
         {r.person && <ResourcePerson person={r.person} accent={r.accent} />}
         {r.isBridge && (
           <div className="rcard__bridge">
@@ -356,6 +337,25 @@ function ResourceCard({ r, idx, onOpenReels }) {
         )}
       </div>
 
+      {r.extraMedia?.kind === 'tv' && (
+        <div className="rcard__extra">
+          <ResourceMediaTV
+            caption={r.extraMedia.caption}
+            duration={r.extraMedia.duration}
+            accent={r.accent}
+          />
+        </div>
+      )}
+      {r.extraMedia?.kind === 'video' && (
+        <div className="rcard__extra">
+          <ResourceMediaVideo
+            src={r.extraMedia.src}
+            poster={r.extraMedia.poster}
+            caption={r.extraMedia.caption}
+            accent={r.accent}
+          />
+        </div>
+      )}
       {r.reels && (
         <div className="rcard__reels">
           <ResourceReels count={r.reels} accent={r.accent} onOpenReels={onOpenReels} />

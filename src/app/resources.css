@@ -142,6 +142,17 @@
 .rcard__media { padding-top: 14px; min-width: 0; }
 .rcard__body { min-width: 0; }
 .rcard__reels { grid-column: 1 / -1; min-width: 0; padding-top: 24px; }
+.rcard__extra {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding-top: 28px;
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+}
+@media (max-width: 900px) {
+  .rcard__extra { max-width: none; padding-top: 16px; }
+}
 
 /* TV / video player frame */
 .rmedia { display: flex; flex-direction: column; gap: 8px; }
