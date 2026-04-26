@@ -259,11 +259,29 @@ export default function Landscape() {
               key={`subbotniks-${data.year}`}
               photos={data.subbotniks}
               kind="subbotniks"
-              label="Субботник"
+              label="Субботники"
               perView={2}
               onOpen={openLightbox}
             />
           )}
+        </div>
+
+        <div className="year-tabs year-tabs--bottom">
+          {YEARS.map((yr, i) => (
+            <button
+              key={yr.year}
+              className={`year-tab ${i === y ? 'is-active' : ''}`}
+              onClick={() => {
+                setY(i);
+                document
+                  .getElementById('landscape')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
+              <span className="year-tab__year serif">{yr.year}</span>
+              <span className="year-tab__title">{yr.title}</span>
+            </button>
+          ))}
         </div>
       </div>
       {lb && (

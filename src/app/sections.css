@@ -709,6 +709,10 @@ html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0;
   gap: 12px;
   margin-bottom: 48px;
 }
+.year-tabs--bottom {
+  margin-top: 48px;
+  margin-bottom: 0;
+}
 .year-tab {
   background: transparent;
   border: 1px solid var(--line-strong);
@@ -1046,6 +1050,7 @@ html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0;
   background: var(--bg-elevated);
   min-width: 0;
 }
+.gallery-row--plants .gallery-row__cell { aspect-ratio: 3 / 4; }
 .gallery-row__cell img {
   width: 100%;
   height: 100%;
@@ -1210,6 +1215,7 @@ html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0;
     flex-basis: 100%;
     aspect-ratio: 16 / 10;
   }
+  .gallery-row--plants .gallery-row__cell { aspect-ratio: 3 / 4; }
   .gallery-row__badge { padding: 4px 8px; font-size: 9px; }
   .gallery-row__caption { font-size: 11px; padding: 6px 10px; bottom: 8px; right: 8px; }
 }
