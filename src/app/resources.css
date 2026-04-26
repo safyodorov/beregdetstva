@@ -562,11 +562,13 @@
 
 @media (max-width: 900px) {
   .rcard, .rcard--right {
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 36px 1fr;
+    gap: 12px;
   }
-  .rcard__media { grid-column: 1 / -1; padding-left: 60px; }
+  .rcard__media { grid-column: 1 / -1; padding-left: 0; }
   .rcard--right .rcard__body { order: 2; }
   .rcard--right .rcard__media { order: 3; }
-  .rcard__num { font-size: 56px; padding: 4px 0; }
+  .rcard__num { font-size: 44px; padding: 4px 0; }
+  .rcards::before { left: 18px; }
   .rperson { grid-template-columns: 110px 1fr; }
 }
