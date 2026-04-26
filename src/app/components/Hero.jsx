@@ -273,7 +273,15 @@ export default function Hero() {
       >
         <div className="hero__meta">
           <span className="seal">ТОС Новая Дерябиха</span>
-          <span className="hero__coord mono">56.949656° N · 41.063049° E</span>
+          <a
+            className="hero__coord mono"
+            href="https://yandex.com/maps/-/CPGozN~u"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Открыть в Яндекс.Картах"
+          >
+            56.9497° N · 41.0630° E
+          </a>
         </div>
 
         <h1 className="hero__title serif">
