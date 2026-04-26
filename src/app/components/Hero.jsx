@@ -273,7 +273,7 @@ export default function Hero() {
       >
         <div className="hero__meta">
           <span className="seal">ТОС Новая Дерябиха</span>
-          <span className="hero__coord mono">57.923° N · 40.985° E</span>
+          <span className="hero__coord mono">56.949656° N · 41.063049° E</span>
         </div>
 
         <h1 className="hero__title serif">
