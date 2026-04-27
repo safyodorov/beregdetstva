@@ -281,9 +281,9 @@ function ResourceCard({ r, idx, onOpenReels }) {
       <div className="rcard__body">
         <div className="rcard__kicker mono">{r.kicker}</div>
         <h3 className="rcard__title serif">{r.title}</h3>
-        <p className="rcard__text">{r.body}</p>
+        {!r.isBridge && <p className="rcard__text">{r.body}</p>}
 
-        {(r.badge || r.years) && (
+        {!r.isBridge && (r.badge || r.years) && (
           <div className="rcard__stats">
             {r.badge && (
               <div className="rcard__badge">
@@ -329,10 +329,13 @@ function ResourceCard({ r, idx, onOpenReels }) {
         {r.person && <ResourcePerson person={r.person} accent={r.accent} />}
         {r.isBridge && (
           <div className="rcard__bridge">
-            <div className="rcard__bridge-arrow">↓</div>
-            <a href="#team" className="rcard__bridge-link mono">
-              смотреть команду
-            </a>
+            <p className="rcard__bridge-text">{r.body}</p>
+            {r.badge && (
+              <div className="rcard__badge rcard__badge--bridge">
+                <div className="rcard__badge-value serif">{r.badge.value}</div>
+                <div className="rcard__badge-label mono">{r.badge.label}</div>
+              </div>
+            )}
           </div>
         )}
       </div>
