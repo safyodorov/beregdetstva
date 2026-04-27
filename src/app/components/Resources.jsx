@@ -327,6 +327,14 @@ function ResourceCard({ r, idx, onOpenReels }) {
           <ResourceMediaTV caption={r.media.caption} duration={r.media.duration} accent={r.accent} />
         )}
         {r.person && <ResourcePerson person={r.person} accent={r.accent} />}
+        {r.isBridge && (
+          <div className="rcard__bridge">
+            <div className="rcard__bridge-arrow">↓</div>
+            <a href="#team" className="rcard__bridge-link mono">
+              смотреть команду
+            </a>
+          </div>
+        )}
       </div>
 
       {r.extraMedia?.kind === 'tv' && (
