@@ -217,6 +217,9 @@ export default function Thanks() {
             <div>
               <a href="https://новаядерябиха.рф">новаядерябиха.рф</a>
             </div>
+            <div>
+              <a href="mailto:newderyabiha@gmail.com">newderyabiha@gmail.com</a>
+            </div>
           </div>
           <div className="footer__col">
             <div className="mono footer__label">Проект</div>
