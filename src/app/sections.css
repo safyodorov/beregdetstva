@@ -313,7 +313,7 @@ html[data-theme="night"] .hero__scroll-hint {
 .section--history { background: var(--bg-elevated); }
 .section--stages { background: var(--bg); }
 .section--landscape { background: var(--bg-elevated); }
-.section--team { background: var(--bg); }
+.section--team { background: var(--bg); padding-top: clamp(20px, 4vh, 60px); }
 .section--thanks { background: var(--bordeaux-900); color: #f5d8d8; }
 html[data-theme="night"] .section--thanks { background: #08030a; color: #d9c6b0; }
 

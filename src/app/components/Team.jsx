@@ -18,17 +18,6 @@ export default function Team() {
   return (
     <section id="team" className="section section--team" data-screen-label="05 Команда">
       <div className="container">
-        <div className="section-heading">
-          <div>
-            <div className="num">— 05 —</div>
-            <h2>Команда</h2>
-          </div>
-          <p className="lede">
-            Девять человек и больше 100 неравнодушных соседей. Без должностей, с ответственностью
-            и любовью к своему дому, к своему микрорайону.
-          </p>
-        </div>
-
         <div className="polaroids">
           {TEAM.map((p, i) => (
             <figure
