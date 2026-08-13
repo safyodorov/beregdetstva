@@ -43,8 +43,8 @@ const SUBBOTNIK_2025 = [
 
 const SUBBOTNIK_2026 = [
   buildGroup('2026', '02', 'Открытие программы «Цветущий город»', 11),
-  buildGroup('2026', '03', 'Мастер-класс по обрезке', 11),
   buildGroup('2026', '01', 'Подготовка', 16),
+  buildGroup('2026', '03', 'Мастер-класс по обрезке', 11),
   buildGroup('2026', '04', 'Экстренная перевязка ивы', 6),
   buildGroup('2026', '05', 'Зелёный цех', 16),
   buildGroup('2026', '06', 'Предзащита проекта', 7),
@@ -196,7 +196,11 @@ function GalleryRow({ photos, captions, badges, kind, label, perView, onOpen, sh
     const onScroll = () => {
       const step = cellStep();
       if (!step) return;
-      setActiveIdx(Math.round(el.scrollLeft / step));
+      // Последняя ячейка не может встать к левому краю вьюпорта, поэтому
+      // у правого края ленты подсвечиваем последнюю точку явно
+      const scrollable = el.scrollWidth - el.clientWidth > 2;
+      const atEnd = scrollable && el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+      setActiveIdx(atEnd ? photos.length - 1 : Math.round(el.scrollLeft / step));
     };
     el.addEventListener('scroll', onScroll, { passive: true });
     return () => el.removeEventListener('scroll', onScroll);
