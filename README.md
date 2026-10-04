@@ -149,6 +149,20 @@ ssh root@155.212.133.103 '\
 scp public/videos/promo.mp4 root@155.212.133.103:/var/www/beregdetstva/public/videos/
 ```
 
+Все `.mp4` (`public/videos/`, `public/photos/**/*.mp4`) в git не попадают — живут только на VPS, заливаются rsync'ом из деплоя.
+
+Видео для сайта — **H.264 + AAC, `+faststart`** (индекс `moov` в начале файла: без него браузер не начнёт играть, пока не скачает файл целиком). Исходники с iPhone (`.MOV`, HEVC) часть браузеров не покажет вовсе — всегда перекодировать:
+
+```bash
+# вертикальный ролик → 720×1280; горизонтальный: scale=1280:-2; сюжет ТВ: scale=1920:-2, -crf 23 -maxrate 3500k
+ffmpeg -i in.MOV -vf "scale=720:-2:out_range=tv,format=yuv420p" \
+  -c:v libx264 -preset slow -profile:v high -crf 24 -maxrate 2000k -bufsize 4000k -g 60 \
+  -c:a aac -b:a 128k -ac 2 -movflags +faststart out.mp4
+# постер — кадр ролика, JPEG q80 того же размера
+```
+
+Если видео перекодируется **по тому же пути** — поднять версию в ссылке (`?v=2` → `?v=3`, см. `Resources.jsx`): видео грузится кусками (Range), и браузер может склеить закешированные куски старого файла с новым.
+
 ### Про фото
 
 Конвенция для фотоальбомов субботников (`public/photos/subbotnik/<год>/<NN>/1..N.jpg`):
@@ -179,6 +193,9 @@ scp public/videos/promo.mp4 root@155.212.133.103:/var/www/beregdetstva/public/vi
 | Этап проекта | `src/app/components/Stages.jsx` — массив `STAGES` |
 | Ассортимент / статистику по году | `src/app/components/Landscape.jsx` — массив `YEARS` |
 | Фото в Галерее | `src/app/components/Gallery.jsx` — массив `GALLERY_YEARS` |
+| Ресурсы проекта (карточки 01–06) | `src/app/components/Resources.jsx` — массив `RESOURCES` |
+| Ролики софинансирования по годам | `src/app/components/Resources.jsx` — массив `REEL_ROWS` (файлы в `photos/resources/reels/`) |
+| Фото в карточке «Субботники» | `src/app/components/Resources.jsx` — `SUBBOTNIK_PHOTOS` (номер файла + пропорции) |
 | Состав команды | `src/app/components/Team.jsx` — массив `TEAM` |
 | Благодарности / контакты | `src/app/components/Thanks.jsx` — массив `THANKS` + footer |
 | Навигационное меню | `src/app/components/Chrome.jsx` — блок `.nav__links` |
