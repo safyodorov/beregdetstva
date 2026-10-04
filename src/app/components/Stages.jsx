@@ -120,7 +120,7 @@ const STAGES = [
     items: [
       { n: 'Парковые качели «Гранит»', size: '2700 × 900 × 2530 мм', note: 'Арт. 108-01.108.20-20', photo: '/photos/stage4/item-1.jpg' },
       { n: 'Скамья стальная «Модерн»', size: '2000 × 610 × 835 мм', note: 'Арт. 7106', photo: '/photos/stage4/item-2.jpg' },
-      { n: 'Многолетники', size: '200+ растений', note: 'Ирисы, шалфей, астры, мискантусы.', photo: '/photos/stage4/item-3.jpg' },
+      { n: 'Скамейка чугунная «Якорь»', size: '1800 × 1020 × 940 мм', note: 'Арт. 10750', photo: '/photos/stage4/item-3.jpg' },
     ],
   },
   {
