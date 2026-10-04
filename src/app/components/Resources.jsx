@@ -3,10 +3,42 @@
 import { useState } from 'react';
 import Lightbox from './Lightbox';
 
-const REELS = Array.from({ length: 8 }, (_, i) => ({
-  src: `/photos/resources/reels/${i + 1}.mp4`,
-  poster: `/photos/resources/reels/${i + 1}-poster.jpg`,
-}));
+// ?v=N — версия файла. Видео идут кусками (Range), поэтому при перекодировании по тому же
+// пути версию надо поднять, иначе браузер склеит закешированные куски старого файла с новым.
+// reelRow(year, dir, count, title, tag, versions?) — versions: { номер ролика: версия }
+const reelRow = (year, dir, count, title, tag, versions = {}) => ({
+  year,
+  title,
+  tag,
+  items: Array.from({ length: count }, (_, i) => ({
+    src: `${dir}/${i + 1}.mp4${versions[i + 1] ? `?v=${versions[i + 1]}` : ''}`,
+    poster: `${dir}/${i + 1}-poster.jpg`,
+  })),
+});
+
+const REEL_ROWS = [
+  reelRow('2025', '/photos/resources/reels', 8, 'Промо-ролики · ВКонтакте', 'VK · Reel', { 3: 2 }),
+  reelRow('2026', '/photos/resources/reels/2026', 6, 'Ролики сборов', null),
+];
+
+// [номер файла, ширина / высота] — пропорции нужны, чтобы собрать ровные ряды без обрезки
+const SUBBOTNIK_PHOTOS = [
+  [1, 3 / 2],
+  [2, 3 / 2],
+  [3, 3 / 2],
+  [4, 3 / 2],
+  [5, 3 / 4],
+  [6, 4 / 3],
+  [7, 3 / 4],
+].map(([n, ar]) => ({ src: `/photos/resources/subbotniki/${n}.jpg`, ar }));
+
+const pluralReels = (n) => {
+  const m10 = n % 10;
+  const m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return `${n} ролик`;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return `${n} ролика`;
+  return `${n} роликов`;
+};
 
 const RESOURCES = [
   {
@@ -24,9 +56,16 @@ const RESOURCES = [
     ],
     media: {
       kind: 'video',
-      src: '/photos/resources/local-initiatives.mp4',
+      src: '/photos/resources/local-initiatives.mp4?v=2',
       poster: '/photos/resources/local-initiatives-poster.jpg',
       caption: 'Сюжет регионального ТВ',
+    },
+    extraMedia: {
+      kind: 'video',
+      wide: true,
+      src: '/photos/resources/local-initiatives-2026.mp4',
+      poster: '/photos/resources/local-initiatives-2026-poster.jpg',
+      caption: 'Сюжет на ТВ · 2026',
     },
   },
   {
@@ -62,10 +101,10 @@ const RESOURCES = [
       'За три года жители и местный бизнес собрали более 300 000 рублей. Софинансирование — обязательное условие грантовых программ и база для проведения субботников.',
     badge: { value: '300 000+ ₽', label: 'за три года' },
     accent: '#c24a4a',
-    reels: 8,
+    reels: REEL_ROWS,
     media: {
       kind: 'video',
-      src: '/photos/resources/sofinansirovanie.mp4',
+      src: '/photos/resources/sofinansirovanie.mp4?v=2',
       poster: '/photos/resources/sofinansirovanie-poster.jpg',
       caption: 'Промо-ролик в поддержку проекта',
     },
@@ -85,6 +124,22 @@ const RESOURCES = [
   },
   {
     n: '05',
+    kicker: 'Жители · трудовое участие',
+    title: 'Субботники',
+    body:
+      'Трудовое участие жителей — основа проекта и самое ценное, что у нас есть. Именно оно позволяет нам двигаться вперёд и вдохновляет на новые подвиги.',
+    accent: '#5a8862',
+    media: {
+      kind: 'video',
+      vertical: true,
+      src: '/photos/resources/subbotniki.mp4',
+      poster: '/photos/resources/subbotniki-poster.jpg',
+      caption: 'Видео с субботника',
+    },
+    photos: SUBBOTNIK_PHOTOS,
+  },
+  {
+    n: '06',
     kicker: 'Связующее звено',
     title: 'Команда ТОС «Новая Дерябиха»',
     body:
@@ -106,9 +161,12 @@ function ResourceMediaPhoto({ src, caption, accent }) {
   );
 }
 
-function ResourceMediaVideo({ src, poster, caption, accent }) {
+function ResourceMediaVideo({ src, poster, caption, accent, vertical }) {
   return (
-    <div className="rmedia rmedia--video" style={{ '--rmedia-accent': accent }}>
+    <div
+      className={`rmedia rmedia--video ${vertical ? 'rmedia--vertical' : ''}`}
+      style={{ '--rmedia-accent': accent }}
+    >
       <div className="rmedia__frame rmedia__frame--video">
         <video
           src={src}
@@ -202,37 +260,86 @@ function ResourceMediaCeremony({ caption, accent }) {
   );
 }
 
-function ResourceReels({ count, accent, onOpenReels }) {
+function ResourceReels({ rows, accent, onOpenReels }) {
   return (
     <div className="rreels">
-      <div className="rreels__header">
-        <div className="rreels__title mono">Промо-ролики · ВКонтакте</div>
-        <div className="rreels__count mono">{count} вертикальных</div>
-      </div>
-      <div className="rreels__track">
-        {REELS.slice(0, count).map((reel, i) => (
-          <button
-            key={i}
-            type="button"
-            className="rreel rreel--v"
-            style={{ '--reel-accent': accent }}
-            onClick={() => onOpenReels(i)}
-            aria-label={`Открыть ролик ${i + 1}`}
-          >
-            <div className="rreel__inner">
-              <img src={reel.poster} alt="" className="rreel__poster" loading="lazy" />
-              <div className="rreel__veil" />
-              <div className="rreel__num serif">{String(i + 1).padStart(2, '0')}</div>
-              <div className="rreel__play">
-                <svg viewBox="0 0 24 24">
-                  <path d="M7 5v14l12-7z" />
-                </svg>
-              </div>
-              <div className="rreel__tag mono">VK · Reel</div>
+      {rows.map((row, r) => (
+        <div key={row.year} className="rreels__row">
+          <div className="rreels__header">
+            <div className="rreels__title">
+              <span className="rreels__year serif">{row.year}</span>
+              <span className="mono">{row.title}</span>
             </div>
-          </button>
-        ))}
-      </div>
+            <div className="rreels__count mono">{pluralReels(row.items.length)}</div>
+          </div>
+          <div className="rreels__track">
+            {row.items.map((reel, i) => (
+              <button
+                key={i}
+                type="button"
+                className="rreel rreel--v"
+                style={{ '--reel-accent': accent }}
+                onClick={() => onOpenReels(r, i)}
+                aria-label={`Открыть ролик ${i + 1} (${row.year})`}
+              >
+                <div className="rreel__inner">
+                  <img src={reel.poster} alt="" className="rreel__poster" loading="lazy" />
+                  <div className="rreel__veil" />
+                  <div className="rreel__num serif">{String(i + 1).padStart(2, '0')}</div>
+                  <div className="rreel__play">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M7 5v14l12-7z" />
+                    </svg>
+                  </div>
+                  {row.tag && <div className="rreel__tag mono">{row.tag}</div>}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Ряды для десктопа: добавляем фото в ряд, пока сумма пропорций приближается к целевой
+// (4.5 — это ряд высотой ~250px на широком экране)
+const toPhotoRows = (photos, target = 4.5) => {
+  const rows = [[]];
+  let sum = 0;
+  photos.forEach((p) => {
+    if (rows.at(-1).length && Math.abs(sum + p.ar - target) > Math.abs(sum - target)) {
+      rows.push([]);
+      sum = 0;
+    }
+    rows.at(-1).push(p);
+    sum += p.ar;
+  });
+  return rows;
+};
+
+function ResourcePhotos({ photos, onOpen }) {
+  return (
+    <div className="rphotos">
+      {toPhotoRows(photos).map((row, r) => (
+        <div key={r} className="rphotos__row">
+          {row.map((p) => {
+            const i = photos.indexOf(p);
+            return (
+              <button
+                key={p.src}
+                type="button"
+                className="rphoto"
+                style={{ '--ar': p.ar }}
+                onClick={() => onOpen(i)}
+                aria-label={`Открыть фото ${i + 1}`}
+              >
+                <img src={p.src} alt="" loading="lazy" />
+              </button>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
@@ -270,8 +377,9 @@ function ResourcePerson({ person, accent }) {
   );
 }
 
-function ResourceCard({ r, idx, onOpenReels }) {
-  const isLeft = idx % 2 === 0;
+function ResourceCard({ r, idx, onOpenReels, onOpenPhotos }) {
+  // Мостик к «Команде» свёрстан под левую раскладку — не чередуем его
+  const isLeft = idx % 2 === 0 || r.isBridge;
   return (
     <article
       className={`rcard ${isLeft ? '' : 'rcard--right'} ${r.isBridge ? 'rcard--bridge' : ''}`}
@@ -315,6 +423,7 @@ function ResourceCard({ r, idx, onOpenReels }) {
             poster={r.media.poster}
             caption={r.media.caption}
             accent={r.accent}
+            vertical={r.media.vertical}
           />
         )}
         {r.media?.kind === 'photo' && (
@@ -350,7 +459,7 @@ function ResourceCard({ r, idx, onOpenReels }) {
         </div>
       )}
       {r.extraMedia?.kind === 'video' && (
-        <div className="rcard__extra">
+        <div className={`rcard__extra ${r.extraMedia.wide ? 'rcard__extra--wide' : ''}`}>
           <ResourceMediaVideo
             src={r.extraMedia.src}
             poster={r.extraMedia.poster}
@@ -359,9 +468,14 @@ function ResourceCard({ r, idx, onOpenReels }) {
           />
         </div>
       )}
+      {r.photos && (
+        <div className="rcard__extra rcard__extra--wide">
+          <ResourcePhotos photos={r.photos} onOpen={(i) => onOpenPhotos(r.photos, i, r.title)} />
+        </div>
+      )}
       {r.reels && (
         <div className="rcard__reels">
-          <ResourceReels count={r.reels} accent={r.accent} onOpenReels={onOpenReels} />
+          <ResourceReels rows={r.reels} accent={r.accent} onOpenReels={onOpenReels} />
         </div>
       )}
     </article>
@@ -369,9 +483,15 @@ function ResourceCard({ r, idx, onOpenReels }) {
 }
 
 export default function Resources() {
-  const [lbIdx, setLbIdx] = useState(-1);
-  const openReels = (i) => setLbIdx(i);
-  const closeLb = () => setLbIdx(-1);
+  const [lb, setLb] = useState(null); // { items, index, caption }
+  const openReels = (row, index) => {
+    const { items, title, year } = REEL_ROWS[row];
+    setLb({ items, index, caption: `${title} · ${year}` });
+  };
+  const openPhotos = (items, index, caption) => setLb({ items, index, caption });
+  const closeLb = () => setLb(null);
+  const lbStep = (d) =>
+    setLb((s) => s && { ...s, index: (s.index + d + s.items.length) % s.items.length });
 
   return (
     <section id="resources" className="section section--resources" data-screen-label="05 Ресурсы">
@@ -393,20 +513,26 @@ export default function Resources() {
 
         <div className="rcards">
           {RESOURCES.map((r, i) => (
-            <ResourceCard key={r.n} r={r} idx={i} onOpenReels={openReels} />
+            <ResourceCard
+              key={r.n}
+              r={r}
+              idx={i}
+              onOpenReels={openReels}
+              onOpenPhotos={openPhotos}
+            />
           ))}
         </div>
       </div>
 
-      {lbIdx >= 0 && (
+      {lb && (
         <Lightbox
-          photos={REELS}
-          index={lbIdx}
-          caption="Промо-ролик ВКонтакте"
+          photos={lb.items}
+          index={lb.index}
+          caption={lb.caption}
           onClose={closeLb}
-          onPrev={() => setLbIdx((i) => (i - 1 + REELS.length) % REELS.length)}
-          onNext={() => setLbIdx((i) => (i + 1) % REELS.length)}
-          onSelect={(i) => setLbIdx(i)}
+          onPrev={() => lbStep(-1)}
+          onNext={() => lbStep(1)}
+          onSelect={(i) => setLb((s) => s && { ...s, index: i })}
         />
       )}
     </section>

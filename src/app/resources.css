@@ -151,8 +151,49 @@
   margin-inline: auto;
   order: 99;
 }
+/* Вертикальное видео (9:16) — не растягиваем на всю колонку, иначе оно выше экрана */
+.rmedia--vertical { width: min(100%, 320px); margin-inline: auto; }
+.rmedia--vertical .rmedia__frame { aspect-ratio: 9/16; }
+
+/* Фото-блок: ровные ряды без обрезки. Ширина фото в ряду пропорциональна его ширине/высоте
+   (--ar), поэтому все фото ряда одной высоты, а ряд — во всю ширину.
+   На десктопе ряды заданы в разметке, на узких экранах фото переносятся сами. */
+.rphotos { display: flex; flex-direction: column; gap: 8px; }
+.rphotos__row { display: flex; gap: 8px; }
+.rphoto {
+  flex: var(--ar) 1 0;
+  min-width: 0;
+  aspect-ratio: var(--ar);
+  padding: 0;
+  border: 0;
+  background: #1a0f0a;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  cursor: zoom-in;
+}
+.rphoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.rphoto:hover img { transform: scale(1.03); }
+@media (max-width: 900px) {
+  .rphotos { --row-h: 220px; flex-flow: row wrap; }
+  .rphotos__row { display: contents; }
+  .rphoto { flex-basis: calc(var(--ar) * var(--row-h)); }
+}
+@media (max-width: 600px) {
+  .rphotos { --row-h: 110px; gap: 6px; }
+}
+
+/* Во всю ширину карточки — от колонки текста до правого края */
+.rcard__extra--wide { grid-column: 2 / -1; max-width: none; padding-top: 12px; }
 @media (max-width: 900px) {
   .rcard__extra { max-width: none; padding-top: 16px; }
+  .rcard__extra--wide { grid-column: 1 / -1; }
 }
 
 /* TV / video player frame */
@@ -323,7 +364,16 @@
 .rreels {
   display: flex;
   flex-direction: column;
+  gap: 22px;
+}
+.rreels__row {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+}
+.rreels__row + .rreels__row {
+  padding-top: 18px;
+  border-top: 1px dashed var(--line);
 }
 .rreels__header {
   display: flex;
@@ -335,7 +385,20 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.rreels__title { color: var(--ink); font-weight: 600; }
+.rreels__title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.rreels__year {
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--rcard-accent);
+}
 .rreels__count { color: var(--ink-soft); }
 
 .rreels__track {
