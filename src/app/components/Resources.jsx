@@ -18,7 +18,7 @@ const reelRow = (year, dir, count, title, tag, versions = {}) => ({
 
 const REEL_ROWS = [
   reelRow('2025', '/photos/resources/reels', 8, 'Промо-ролики · ВКонтакте', 'VK · Reel', { 3: 2 }),
-  reelRow('2026', '/photos/resources/reels/2026', 6, 'Ролики сборов', null),
+  reelRow('2026', '/photos/resources/reels/2026', 6, 'Промо-ролики · ВКонтакте', 'VK · Reel'),
 ];
 
 // [номер файла, ширина / высота] — пропорции нужны, чтобы собрать ровные ряды без обрезки
@@ -106,7 +106,7 @@ const RESOURCES = [
       kind: 'video',
       src: '/photos/resources/sofinansirovanie.mp4?v=2',
       poster: '/photos/resources/sofinansirovanie-poster.jpg',
-      caption: 'Промо-ролик в поддержку проекта',
+      caption: '2024 · Промо-ролик в поддержку проекта',
     },
   },
   {
