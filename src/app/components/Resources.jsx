@@ -106,7 +106,8 @@ const RESOURCES = [
       kind: 'video',
       src: '/photos/resources/sofinansirovanie.mp4?v=2',
       poster: '/photos/resources/sofinansirovanie-poster.jpg',
-      caption: '2024 · Промо-ролик в поддержку проекта',
+      year: '2024',
+      caption: 'Промо-ролик в поддержку проекта',
     },
   },
   {
@@ -161,7 +162,7 @@ function ResourceMediaPhoto({ src, caption, accent }) {
   );
 }
 
-function ResourceMediaVideo({ src, poster, caption, accent, vertical }) {
+function ResourceMediaVideo({ src, poster, caption, accent, vertical, year }) {
   return (
     <div
       className={`rmedia rmedia--video ${vertical ? 'rmedia--vertical' : ''}`}
@@ -177,7 +178,12 @@ function ResourceMediaVideo({ src, poster, caption, accent, vertical }) {
           className="rmedia__player"
         />
       </div>
-      {caption && <div className="rmedia__caption mono">{caption}</div>}
+      {caption && (
+        <div className={`rmedia__caption mono ${year ? 'rmedia__caption--year' : ''}`}>
+          {year && <span className="rreels__year serif">{year}</span>}
+          {caption}
+        </div>
+      )}
     </div>
   );
 }
@@ -424,6 +430,7 @@ function ResourceCard({ r, idx, onOpenReels, onOpenPhotos }) {
             caption={r.media.caption}
             accent={r.accent}
             vertical={r.media.vertical}
+            year={r.media.year}
           />
         )}
         {r.media?.kind === 'photo' && (

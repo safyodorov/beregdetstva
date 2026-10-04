@@ -196,6 +196,8 @@ ffmpeg -i in.MOV -vf "scale=720:-2:out_range=tv,format=yuv420p" \
 | Ресурсы проекта (карточки 01–06) | `src/app/components/Resources.jsx` — массив `RESOURCES` |
 | Ролики софинансирования по годам | `src/app/components/Resources.jsx` — массив `REEL_ROWS` (файлы в `photos/resources/reels/`) |
 | Фото в карточке «Субботники» | `src/app/components/Resources.jsx` — `SUBBOTNIK_PHOTOS` (номер файла + пропорции) |
+| Порядок фото в альбоме субботника | `src/app/components/Landscape.jsx` — вместо числа фото массив номеров файлов: `buildGroup('2026', '12', '…', [9, 3, 4, …])` |
+| Песня «Берег Детства» (плеер + караоке) | `src/app/components/Song.jsx`, стили `src/app/song.css`; текст с таймкодами — `songLyrics.js` (копия `08.lrc` из проекта песнидерябихи.рф), mp3 — `public/audio/` |
 | Состав команды | `src/app/components/Team.jsx` — массив `TEAM` |
 | Благодарности / контакты | `src/app/components/Thanks.jsx` — массив `THANKS` + footer |
 | Навигационное меню | `src/app/components/Chrome.jsx` — блок `.nav__links` |

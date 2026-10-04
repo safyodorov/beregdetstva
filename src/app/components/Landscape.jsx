@@ -3,13 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import Lightbox from './Lightbox';
 
-// buildGroup(year, dir, name, photoCount, videoIndices?)
-const buildGroup = (year, dir, name, photoCount, videos = []) => ({
+// buildGroup(year, dir, name, photos, videoIndices?)
+// photos — число N (файлы 1..N по порядку) или массив номеров файлов в нужном порядке:
+// файлы альбомов не переименовываем (месячный кеш), порядок меняем здесь
+const buildGroup = (year, dir, name, photos, videos = []) => ({
   name,
   items: [
-    ...Array.from(
-      { length: photoCount },
-      (_, i) => `/photos/subbotnik/${year}/${dir}/${i + 1}.jpg`,
+    ...(Array.isArray(photos) ? photos : Array.from({ length: photos }, (_, i) => i + 1)).map(
+      (n) => `/photos/subbotnik/${year}/${dir}/${n}.jpg`,
     ),
     ...videos.map((vi) => ({
       src: `/photos/subbotnik/${year}/${dir}/v${vi}.mp4`,
@@ -53,7 +54,7 @@ const SUBBOTNIK_2026 = [
   buildGroup('2026', '08', 'Обсуждаем планы с администрацией', 1),
   buildGroup('2026', '09', 'Выравнивание участка', 14),
   buildGroup('2026', '11', 'Репетиция', 10),
-  buildGroup('2026', '12', 'Прополка и уход', 16),
+  buildGroup('2026', '12', 'Прополка и уход', [9, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 1, 2]),
   buildGroup('2026', '13', 'Установка оборудования', 8),
   buildGroup('2026', '14', 'Произвольная программа', 47),
   buildGroup('2026', '15', 'Приёмка этапа 3', 37),

@@ -1,6 +1,7 @@
 import Chrome from './components/Chrome';
 import Hero from './components/Hero';
 import History from './components/History';
+import Song from './components/Song';
 import Stages from './components/Stages';
 import Landscape from './components/Landscape';
 import Resources from './components/Resources';
@@ -16,6 +17,7 @@ export default function Page() {
       <main>
         <Hero />
         <History />
+        <Song />
         <Stages />
         <Landscape />
         <Resources />

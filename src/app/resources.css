@@ -296,6 +296,15 @@
   text-transform: uppercase;
   padding-left: 2px;
 }
+/* Подпись с годом — как заголовки рядов роликов (.rreels__title) */
+.rmedia__caption--year {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  font-weight: 600;
+}
 
 /* Ceremony photo placeholder */
 .rmedia__frame--photo { background: #f0e3cf; }
